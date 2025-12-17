@@ -1,0 +1,114 @@
+---
+---
+<div id="order-modal" class="fixed inset-0 z-[100] hidden flex items-center justify-center p-4 bg-zinc-900/60 backdrop-blur-sm">
+  <div class="bg-white w-full max-w-lg rounded-[2.5rem] p-8 md:p-10 shadow-2xl overflow-y-auto max-h-[90vh] relative border border-zinc-100">
+    
+    <button id="close-modal" class="absolute top-8 right-8 text-zinc-400 hover:text-zinc-900 transition-colors">
+      <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
+    </button>
+
+    <div class="mb-10">
+      <span class="text-red-600 font-bold tracking-[0.2em] uppercase text-[10px]">Confirmación</span>
+      <h2 class="text-4xl font-black italic uppercase text-zinc-900 leading-none mt-2">Tu Pedido</h2>
+    </div>
+
+    <div class="space-y-4 mb-8">
+      <div id="cart-items-list" class="space-y-3"></div>
+      
+      <label class="flex items-center gap-4 p-4 bg-zinc-50 rounded-2xl cursor-pointer hover:bg-zinc-100 transition-all border border-zinc-100 group">
+        <input type="checkbox" id="extra-cheese" class="w-5 h-5 accent-red-600" />
+        <div class="flex flex-col">
+          <span class="text-[11px] font-black uppercase text-zinc-900 tracking-wider">¿Añadir Orilla de Queso?</span>
+          <span class="text-[9px] text-zinc-400 uppercase font-bold">Gratis Martes y Jueves</span>
+        </div>
+      </label>
+
+      <div class="mt-8 pt-6 border-t border-dashed border-zinc-200 flex justify-between items-end">
+        <div>
+          <p class="text-[10px] font-black uppercase tracking-widest text-zinc-400">Total a Pagar</p>
+          <p id="pizza-price" class="text-5xl font-black text-zinc-900 leading-none italic mt-1">$0</p>
+        </div>
+        <div class="text-right">
+            <span class="bg-red-50 text-red-600 text-[10px] font-black px-3 py-1 rounded-full uppercase italic leading-none">Resumen Final</span>
+        </div>
+      </div>
+    </div>
+
+    <form id="order-form" class="space-y-6">
+      <div class="grid grid-cols-1 gap-4">
+        <div class="space-y-2">
+          <label class="text-[10px] font-black uppercase tracking-widest text-zinc-400 ml-2">Nombre Completo</label>
+          <input type="text" required name="nombre" placeholder="¿A nombre de quién?" class="w-full bg-zinc-50 border border-zinc-100 rounded-2xl p-4 text-zinc-900 placeholder:text-zinc-300 focus:bg-white focus:border-red-600 outline-none transition-all" />
+        </div>
+        
+        <div class="space-y-2">
+          <label class="text-[10px] font-black uppercase tracking-widest text-zinc-400 ml-2">Dirección de Entrega</label>
+          <input type="text" required name="direccion" placeholder="Calle, número y referencias" class="w-full bg-zinc-50 border border-zinc-100 rounded-2xl p-4 text-zinc-900 placeholder:text-zinc-300 focus:bg-white focus:border-red-600 outline-none transition-all" />
+        </div>
+
+        <div class="space-y-2">
+          <label class="text-[10px] font-black uppercase tracking-widest text-zinc-400 ml-2 italic">Notas (Ej: Mitad y Mitad +$20)</label>
+          <textarea name="notas" placeholder="¿Alguna indicación extra o estaciones elegidas?" class="w-full bg-zinc-50 border border-zinc-100 rounded-2xl p-4 text-zinc-900 placeholder:text-zinc-300 focus:bg-white focus:border-red-600 outline-none transition-all resize-none h-20"></textarea>
+        </div>
+      </div>
+
+      <div class="space-y-2">
+        <label class="text-[10px] font-black uppercase tracking-widest text-zinc-400 ml-2 text-center block">Método de Pago</label>
+        <div class="grid grid-cols-2 gap-3">
+          <label class="cursor-pointer">
+            <input type="radio" name="pago" value="Efectivo" checked class="hidden peer" />
+            <div class="p-4 border border-zinc-100 bg-zinc-50 rounded-2xl text-center font-bold text-[10px] uppercase tracking-widest peer-checked:bg-zinc-900 peer-checked:text-white transition-all">💵 Efectivo</div>
+          </label>
+          <label class="cursor-pointer">
+            <input type="radio" name="pago" value="Transferencia" class="hidden peer" />
+            <div class="p-4 border border-zinc-100 bg-zinc-50 rounded-2xl text-center font-bold text-[10px] uppercase tracking-widest peer-checked:bg-zinc-900 peer-checked:text-white transition-all">📱 Transf.</div>
+          </label>
+        </div>
+      </div>
+
+      <button type="submit" class="w-full bg-red-600 hover:bg-red-700 text-white font-black py-5 rounded-[2rem] transition-all shadow-xl shadow-red-600/20 uppercase italic text-sm tracking-widest mt-4">
+        Enviar pedido vía WhatsApp
+      </button>
+    </form>
+  </div>
+</div>
+
+<script>
+  document.getElementById('close-modal')?.addEventListener('click', () => {
+    document.getElementById('order-modal')?.classList.add('hidden');
+  });
+
+  const form = document.getElementById('order-form') as HTMLFormElement;
+  form?.addEventListener('submit', (e) => {
+    e.preventDefault();
+    const formData = new FormData(form);
+    const cart = (window as any).cart || [];
+    const extraCheese = (document.getElementById('extra-cheese') as HTMLInputElement).checked;
+    
+    // Detectamos si el carrito tiene productos con refresco gratis
+    const tieneRefresco2L = cart.some((p: any) => p.nombre.includes('Barra') || p.nombre.includes('Cuadrada'));
+    const tieneRefresco2_5L = cart.some((p: any) => p.nombre.includes('Rectangular'));
+
+    let productosTexto = cart.map((p: any) => `- ${p.nombre} (${p.tam})`).join('%0A');
+    let total = cart.reduce((acc: number, curr: any) => acc + curr.precio, 0);
+    
+    let mensaje = `*NUEVO PEDIDO - ROGER PIZZAS*%0A` +
+                  `----------------------------%0A` +
+                  `*Cliente:* ${formData.get('nombre')}%0A` +
+                  `*Dirección:* ${formData.get('direccion')}%0A` +
+                  `*Pago:* ${formData.get('pago')}%0A` +
+                  `*Orilla de Queso:* ${extraCheese ? 'SÍ (Sujeto a promo)' : 'NO'}%0A` +
+                  `*Notas:* ${formData.get('notas') || 'Ninguna'}%0A%0A` +
+                  `*Productos:*%0A${productosTexto}%0A%0A`;
+
+    // Añadir avisos de refresco gratis según el producto
+    if (tieneRefresco2L) mensaje += `🎁 *INCLUYE:* Refresco 2 Lts GRATIS%0A`;
+    if (tieneRefresco2_5L) mensaje += `🎁 *INCLUYE:* Refresco 2.5 Lts GRATIS%0A`;
+
+    mensaje += `*TOTAL:* $${total}%0A` +
+               `----------------------------%0A` +
+               `_Nota: Pizzas redondas mitad y mitad +$20 c/u_`;
+
+    window.open(`https://wa.me/2721318273?text=${mensaje}`, '_blank');
+  });
+</script>

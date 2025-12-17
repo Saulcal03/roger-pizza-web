@@ -1,0 +1,61 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    /* Definimos los colores de la marca para reusarlos */
+    --roger-red: #b91c1c;    /* Un rojo profundo más elegante */
+    --roger-yellow: #f59e0b; /* El amarillo vibrante de la imagen */
+    --roger-bg: #f9f8f6;     /* El fondo crema premium */
+  }
+
+  html {
+    -webkit-tap-highlight-color: transparent;
+    scroll-behavior: smooth;
+  }
+
+  body {
+    @apply antialiased text-zinc-900;
+    background-color: var(--roger-bg);
+  }
+}
+
+@layer components {
+  /* Botón de acción con estilo Premium */
+  .btn-primary {
+    @apply bg-red-600 text-white font-black italic uppercase tracking-widest 
+           px-8 py-4 rounded-2xl transition-all duration-300 
+           hover:bg-red-700 hover:shadow-xl hover:shadow-red-600/20 
+           active:scale-95 text-xs inline-flex items-center justify-center;
+  }
+
+  /* Efecto de cristal para el Navbar o Modales */
+  .glass-effect {
+    @apply bg-white/70 backdrop-blur-xl border-b border-zinc-200/50;
+  }
+
+  /* Estilo para los inputs del formulario */
+  .input-premium {
+    @apply w-full bg-zinc-50 border border-zinc-100 rounded-2xl p-4 
+           text-zinc-900 placeholder:text-zinc-300 outline-none 
+           focus:bg-white focus:border-red-600 focus:ring-4 
+           focus:ring-red-600/5 transition-all duration-300;
+  }
+}
+
+/* Animaciones personalizadas para que la web "viva" */
+@keyframes float {
+  0% { transform: translateY(0px); }
+  50% { transform: translateY(-10px); }
+  100% { transform: translateY(0px); }
+}
+
+.animate-float {
+  animation: float 6s ease-in-out infinite;
+}
+
+/* Mejorar la legibilidad de las imágenes */
+img {
+  @apply selection:bg-transparent;
+}

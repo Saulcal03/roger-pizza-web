@@ -1,0 +1,70 @@
+---
+// Recibimos los precios como un objeto { chica, mediana, grande, familiar }
+const { nombre, ingredientes, imagen, precios } = Astro.props;
+
+// Generamos un ID único para los inputs de radio basándonos en el nombre
+const idSafe = nombre.toLowerCase().replace(/\s+/g, '-');
+---
+
+<div class="pizza-card bg-white rounded-[2.5rem] p-4 border border-zinc-100 hover:shadow-[0_20px_50px_rgba(0,0,0,0.05)] transition-all duration-500 group flex flex-col h-full">
+  
+  <div class="relative h-64 overflow-hidden rounded-[2rem] mb-6">
+    <img 
+      src={imagen} 
+      alt={nombre} 
+      class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700" 
+    />
+    <div class="absolute top-4 right-4 bg-red-600 text-white px-4 py-1 rounded-full font-black text-[10px] tracking-widest uppercase shadow-lg">
+      2x1 Promo
+    </div>
+  </div>
+  
+  <div class="px-4 pb-4 flex flex-col flex-grow">
+    <div class="mb-6">
+      <h3 class="text-2xl font-black italic uppercase text-zinc-900 leading-none tracking-tight">
+        {nombre}
+      </h3>
+      <p class="text-zinc-400 text-[11px] mt-3 uppercase tracking-wider font-medium leading-relaxed line-clamp-2">
+        {ingredientes}
+      </p>
+    </div>
+    
+    <div class="mt-auto space-y-4">
+      <p class="text-[9px] font-bold uppercase tracking-[0.2em] text-zinc-300 ml-1">
+        Selecciona Tamaño
+      </p>
+      
+      <div class="grid grid-cols-2 gap-2">
+        {Object.entries(precios).map(([size, price]) => (
+          <label class="cursor-pointer group/item">
+            <input 
+              type="radio" 
+              name={`size-${idSafe}`} 
+              value={`${size.charAt(0).toUpperCase() + size.slice(1)} - $${price}`} 
+              class="hidden peer" 
+            />
+            <div class="bg-zinc-50 border border-zinc-100 rounded-2xl p-3 text-center transition-all peer-checked:bg-zinc-900 peer-checked:text-white peer-checked:scale-[0.98]">
+              <p class="text-[8px] uppercase font-bold opacity-40 mb-1 group-hover/item:opacity-60 transition-opacity">
+                {size}
+              </p>
+              <p class="text-sm font-black tracking-tighter">
+                ${price}
+              </p>
+            </div>
+          </label>
+        ))}
+      </div>
+      
+      <button class="add-btn w-full bg-red-600 hover:bg-red-700 text-white font-bold py-4 rounded-2xl transition-all uppercase tracking-widest text-[11px] shadow-lg shadow-red-600/10 active:scale-95">
+        Añadir al pedido
+      </button>
+    </div>
+  </div>
+</div>
+
+<style>
+  /* Efecto de suavizado para el hover de la card */
+  .pizza-card {
+    will-change: transform, shadow;
+  }
+</style>

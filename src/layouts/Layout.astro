@@ -1,0 +1,72 @@
+---
+import '../styles/global.css';
+
+interface Props {
+	title: string;
+}
+
+const { title } = Astro.props;
+---
+<!doctype html>
+<html lang="es" class="scroll-smooth">
+	<head>
+		<meta charset="UTF-8" />
+		<meta name="viewport" content="width=device-width" />
+		<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+		<meta name="generator" content={Astro.generator} />
+		<title>{title}</title>
+
+		<link rel="preconnect" href="https://fonts.googleapis.com">
+		<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+		<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700;900&family=Montserrat:ital,wght@0,900;1,900&display=swap" rel="stylesheet">
+	</head>
+	
+	<body class="bg-[#F9F8F6] text-zinc-900 antialiased selection:bg-red-600 selection:text-white overflow-x-hidden">
+		
+		<div class="fixed inset-0 pointer-events-none opacity-[0.03] z-[9999] bg-[url('https://grainy-gradients.vercel.app/noise.svg')]"></div>
+
+		<slot />
+
+		<style is:global>
+			:root {
+				--accent: 220, 38, 38; /* Rojo Roger */
+				--accent-light: 254, 242, 242;
+			}
+
+			/* Tipografías base */
+			body {
+				font-family: 'Inter', sans-serif;
+			}
+
+			h1, h2, h3, .font-black {
+				font-family: 'Montserrat', sans-serif;
+				letter-spacing: -0.02em;
+			}
+
+			/* Personalización de la barra de desplazamiento */
+			::-webkit-scrollbar {
+				width: 8px;
+			}
+			::-webkit-scrollbar-track {
+				background: #f1f1f1;
+			}
+			::-webkit-scrollbar-thumb {
+				background: #d4d4d8;
+				border-radius: 10px;
+			}
+			::-webkit-scrollbar-thumb:hover {
+				background: #a1a1aa;
+			}
+
+			/* Animación de entrada para las secciones */
+			.fade-in {
+				animation: fadeIn 0.8s ease-out forwards;
+			}
+
+			@keyframes fadeIn {
+				from { opacity: 0; transform: translateY(20px); }
+				to { opacity: 1; transform: translateY(0); }
+			}
+		</style>
+	</body>
+</html>
