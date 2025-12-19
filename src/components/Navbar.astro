@@ -6,8 +6,8 @@
     <div class="flex items-center gap-3">
       <img src="/images/logo-roger.png" alt="Roger Pizzas Logo" class="h-12 w-auto object-contain" />
       <div class="flex flex-col">
-        <span class="text-xl font-black tracking-tighter text-zinc-900 italic leading-none">
-          ROGER<span class="text-red-600">PIZZAS</span>
+        <span class="text-xl font-black tracking-tighter text-zinc-900 italic leading-none uppercase">
+          ROGER<span class="text-roger-green">PIZZAS</span>
         </span>
         <span class="text-[8px] font-bold tracking-[0.4em] text-zinc-400 uppercase ml-1">Est. 2024</span>
       </div>
@@ -15,13 +15,13 @@
 
     <div class="flex items-center gap-8">
       <div class="hidden md:flex gap-6">
-        <a href="#hero" class="text-[10px] font-bold uppercase tracking-widest text-zinc-500 hover:text-red-600 transition-colors">Inicio</a>
-        <a href="#especialidades" class="text-[10px] font-bold uppercase tracking-widest text-zinc-500 hover:text-red-600 transition-colors">Especialidades</a>
+        <a href="#hero" class="text-[10px] font-bold uppercase tracking-widest text-zinc-500 hover:text-roger-green transition-colors">Inicio</a>
+        <a href="#builder" class="text-[10px] font-bold uppercase tracking-widest text-zinc-500 hover:text-roger-green transition-colors">Armar 2x1</a>
       </div>
 
       <button 
         id="open-cart" 
-        class="group relative bg-zinc-900 text-white px-7 py-3 rounded-2xl font-bold text-[11px] uppercase tracking-widest hover:bg-red-600 transition-all duration-300 flex items-center gap-3 shadow-lg shadow-zinc-900/10 active:scale-95"
+        class="group relative bg-zinc-900 text-white px-7 py-3 rounded-2xl font-bold text-[11px] uppercase tracking-widest hover:bg-roger-green transition-all duration-300 flex items-center gap-3 shadow-lg shadow-zinc-900/10 active:scale-95"
       >
         <span class="relative">
           Ver Pedido
@@ -29,7 +29,7 @@
         </span>
         
         <div id="cart-counter-container" class="hidden">
-            <span id="cart-counter" class="bg-red-600 text-white w-6 h-6 rounded-lg flex items-center justify-center text-[10px] font-black border border-white/20 shadow-sm animate-bounce">
+            <span id="cart-counter" class="bg-roger-green text-white w-6 h-6 rounded-lg flex items-center justify-center text-[10px] font-black border border-white/20 shadow-sm">
                 0
             </span>
         </div>
@@ -44,7 +44,35 @@
   </div>
 </nav>
 
-<script>
+<script is:inline>
+    // Inicialización del carrito global
+    window.cart = window.cart || [];
+
+    // Función global para actualizar el Navbar desde cualquier componente
+    window.updateCartUI = function() {
+        const counter = document.getElementById('cart-counter');
+        const container = document.getElementById('cart-counter-container');
+        
+        if (counter && container) {
+            const totalItems = window.cart.reduce((acc, item) => acc + item.cantidad, 0);
+            
+            counter.innerText = totalItems.toString();
+            
+            if (totalItems > 0) {
+                container.classList.remove('hidden');
+                // Efecto visual de "pop" al añadir
+                counter.animate([
+                    { transform: 'scale(1)' },
+                    { transform: 'scale(1.3)' },
+                    { transform: 'scale(1)' }
+                ], { duration: 300 });
+            } else {
+                container.classList.add('hidden');
+            }
+        }
+    };
+
+    // Lógica del scroll
     const nav = document.getElementById('main-nav');
     window.addEventListener('scroll', () => {
         if (window.scrollY > 20) {
@@ -55,10 +83,22 @@
             nav?.classList.remove('py-3', 'shadow-sm', 'bg-white/90');
         }
     });
+
+    // Ejecutar al cargar por si hay algo guardado
+    window.updateCartUI();
 </script>
 
 <style>
     #main-nav {
         transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+    .text-roger-green {
+        color: #16a34a; /* Ajusta al color exacto de tu marca */
+    }
+    .bg-roger-green {
+        background-color: #16a34a;
+    }
+    .hover\:bg-roger-green:hover {
+        background-color: #16a34a;
     }
 </style>

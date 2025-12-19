@@ -1,70 +1,170 @@
 ---
-// Recibimos los precios como un objeto { chica, mediana, grande, familiar }
-const { nombre, ingredientes, imagen, precios } = Astro.props;
+// PizzaCard.astro
 
-// Generamos un ID único para los inputs de radio basándonos en el nombre
+// Definimos la interfaz para que TypeScript no marque errores en las props
+interface Props {
+  nombre: string;
+  ingredientes?: string;
+  imagen: string;
+  precios?: Record<string, number>; // Objeto con llaves string y valores numéricos
+  precio?: number;
+  detalles?: string;
+  regalo?: string;
+  promo2x1?: boolean;
+  categoria?: string;
+  tipo?: string;
+  isStepCard?: boolean;
+}
+
+const { 
+  nombre, 
+  ingredientes, 
+  imagen, 
+  precios, 
+  precio, 
+  detalles, 
+  regalo, 
+  promo2x1, 
+  categoria,
+  tipo,
+  isStepCard = false 
+} = Astro.props;
+
 const idSafe = nombre.toLowerCase().replace(/\s+/g, '-');
 ---
 
-<div class="pizza-card bg-white rounded-[2.5rem] p-4 border border-zinc-100 hover:shadow-[0_20px_50px_rgba(0,0,0,0.05)] transition-all duration-500 group flex flex-col h-full">
-  
-  <div class="relative h-64 overflow-hidden rounded-[2rem] mb-6">
-    <img 
-      src={imagen} 
-      alt={nombre} 
-      class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700" 
-    />
-    <div class="absolute top-4 right-4 bg-red-600 text-white px-4 py-1 rounded-full font-black text-[10px] tracking-widest uppercase shadow-lg">
-      2x1 Promo
+<div 
+  class={`pizza-card group relative bg-white rounded-[2.5rem] border border-zinc-100 shadow-sm transition-all duration-500 overflow-hidden animate-card-in ${isStepCard ? 'p-1 hover:border-roger-green/50' : 'p-2 hover:shadow-2xl hover:-translate-y-2'}`}
+  data-category={categoria}
+  data-nombre={nombre}
+  data-type={tipo} 
+>
+  {!isStepCard && (
+    <div class="absolute top-6 right-6 z-10 flex flex-col gap-2 items-end">
+      {detalles && <span class="bg-roger-green text-white text-[10px] font-bold px-4 py-1.5 rounded-full shadow-lg">{detalles}</span>}
+      {promo2x1 && <span class="bg-roger-lime text-white text-[10px] font-black px-4 py-1.5 rounded-full shadow-lg italic tracking-widest">2X1 PROMO</span>}
     </div>
+  )}
+
+  <div class={`${isStepCard ? 'h-32' : 'h-64'} relative overflow-hidden rounded-[2.2rem]`}>
+    <img src={imagen} alt={nombre} class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-1000" />
+    <div class="absolute inset-0 bg-black/5 opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
   </div>
-  
-  <div class="px-4 pb-4 flex flex-col flex-grow">
-    <div class="mb-6">
-      <h3 class="text-2xl font-black italic uppercase text-zinc-900 leading-none tracking-tight">
+
+  <div class={`${isStepCard ? 'p-4' : 'p-6'} space-y-4`}>
+    <div class="text-center">
+      <h3 class={`${isStepCard ? 'text-lg' : 'text-3xl'} font-black uppercase italic text-zinc-900 leading-none group-hover:text-roger-green transition-colors`}>
         {nombre}
       </h3>
-      <p class="text-zinc-400 text-[11px] mt-3 uppercase tracking-wider font-medium leading-relaxed line-clamp-2">
-        {ingredientes}
-      </p>
+      {!isStepCard && (
+        <p class="text-zinc-400 text-[11px] mt-3 uppercase tracking-widest font-medium leading-relaxed min-h-[32px]">
+          {ingredientes}
+        </p>
+      )}
     </div>
-    
-    <div class="mt-auto space-y-4">
-      <p class="text-[9px] font-bold uppercase tracking-[0.2em] text-zinc-300 ml-1">
-        Selecciona Tamaño
-      </p>
-      
-      <div class="grid grid-cols-2 gap-2">
-        {Object.entries(precios).map(([size, price]) => (
-          <label class="cursor-pointer group/item">
-            <input 
-              type="radio" 
-              name={`size-${idSafe}`} 
-              value={`${size.charAt(0).toUpperCase() + size.slice(1)} - $${price}`} 
-              class="hidden peer" 
-            />
-            <div class="bg-zinc-50 border border-zinc-100 rounded-2xl p-3 text-center transition-all peer-checked:bg-zinc-900 peer-checked:text-white peer-checked:scale-[0.98]">
-              <p class="text-[8px] uppercase font-bold opacity-40 mb-1 group-hover/item:opacity-60 transition-opacity">
-                {size}
-              </p>
-              <p class="text-sm font-black tracking-tighter">
-                ${price}
-              </p>
-            </div>
-          </label>
-        ))}
+
+    {regalo && !isStepCard && (
+      <div class="bg-roger-green/5 border border-roger-green/10 p-4 rounded-[1.5rem] flex items-center justify-center gap-3">
+        <span class="text-xl animate-bounce">🎁</span>
+        <div class="text-left">
+          <p class="text-[9px] font-black text-roger-green uppercase tracking-widest leading-none">Gratis</p>
+          <p class="text-zinc-700 font-bold text-xs uppercase">{regalo}</p>
+        </div>
       </div>
-      
-      <button class="add-btn w-full bg-red-600 hover:bg-red-700 text-white font-bold py-4 rounded-2xl transition-all uppercase tracking-widest text-[11px] shadow-lg shadow-red-600/10 active:scale-95">
-        Añadir al pedido
-      </button>
+    )}
+
+    <div class="space-y-3">
+      {/* CORRECCIÓN: Validamos que precios sea un objeto y no sea null */}
+      {precios && typeof precios === 'object' && !Array.isArray(precios) ? (
+        <div class={`grid ${isStepCard ? 'grid-cols-1' : 'grid-cols-2'} gap-2`}>
+          {Object.entries(precios).map(([size, p], index) => (
+            <label class="cursor-pointer group/item">
+              <input 
+                type="radio" 
+                name={`size-${idSafe}`} 
+                value={p} 
+                data-size={size}
+                class="hidden peer" 
+                checked={index === 0} 
+              />
+              <div class="bg-zinc-50 border border-zinc-100 rounded-2xl p-3 text-center transition-all peer-checked:bg-roger-green peer-checked:text-white">
+                <p class="text-[8px] uppercase font-bold opacity-50">{size}</p>
+                <p class="text-sm font-black italic">${p}</p>
+              </div>
+            </label>
+          ))}
+        </div>
+      ) : (
+        precio && (
+          <div class="bg-zinc-50 p-4 rounded-2xl border border-zinc-100 flex justify-between items-center px-6">
+            <span class="text-[10px] font-black text-zinc-300 uppercase italic tracking-widest">Precio</span>
+            <input type="radio" name={`size-${idSafe}`} value={precio} data-size="Único" class="hidden" checked />
+            <span class="text-2xl font-black text-zinc-900 italic tracking-tighter">${precio}</span>
+          </div>
+        )
+      )}
     </div>
+
+    <button class={`add-to-cart-btn relative w-full overflow-hidden ${isStepCard ? 'hidden' : 'bg-roger-green py-5 rounded-[1.8rem]'} text-white font-bold transition-all hover:opacity-90 shadow-xl active:scale-95 group/btn`}>
+      <span class="relative z-10 flex items-center justify-center gap-2 uppercase tracking-[0.2em] text-[10px]">
+        🛒 Añadir al pedido
+      </span>
+    </button>
   </div>
 </div>
 
+<script>
+  const setupCartButtons = () => {
+    const buttons = document.querySelectorAll('.add-to-cart-btn');
+
+    buttons.forEach(btn => {
+      btn.addEventListener('click', (e) => {
+        const card = (e.target as HTMLElement).closest('.pizza-card') as HTMLElement;
+        if (!card) return;
+
+        const nombre = card.dataset.nombre;
+        const selectedRadio = card.querySelector('input[type="radio"]:checked') as HTMLInputElement;
+        
+        if (selectedRadio) {
+          const precio = parseFloat(selectedRadio.value);
+          const tam = selectedRadio.dataset.size;
+
+          const producto = {
+            nombre: nombre,
+            tam: tam,
+            precio: precio,
+            cantidad: 1
+          };
+
+          // CORRECCIÓN: Uso de (window as any) para evitar errores de TypeScript
+          const globalWindow = (window as any);
+          if (!globalWindow.cart) globalWindow.cart = [];
+          globalWindow.cart.push(producto);
+
+          if (typeof globalWindow.updateCartUI === 'function') {
+            globalWindow.updateCartUI();
+          }
+
+          const btnText = btn.querySelector('span');
+          if (btnText) {
+            const originalText = btnText.innerText;
+            btnText.innerText = "¡AÑADIDO! ✅";
+            setTimeout(() => { btnText.innerText = originalText; }, 1500);
+          }
+        }
+      });
+    });
+  };
+
+  setupCartButtons();
+</script>
+
 <style>
-  /* Efecto de suavizado para el hover de la card */
-  .pizza-card {
-    will-change: transform, shadow;
+  .animate-card-in {
+    animation: cardReveal 0.6s cubic-bezier(0.23, 1, 0.32, 1) forwards;
+  }
+  @keyframes cardReveal {
+    from { opacity: 0; transform: translateY(30px) scale(0.95); }
+    to { opacity: 1; transform: translateY(0) scale(1); }
   }
 </style>

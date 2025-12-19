@@ -8,28 +8,29 @@
     </button>
 
     <div class="mb-10">
-      <span class="text-red-600 font-bold tracking-[0.2em] uppercase text-[10px]">Confirmación</span>
+      <span class="text-roger-green font-bold tracking-[0.2em] uppercase text-[10px]">Revisa tu selección</span>
       <h2 class="text-4xl font-black italic uppercase text-zinc-900 leading-none mt-2">Tu Pedido</h2>
     </div>
 
     <div class="space-y-4 mb-8">
-      <div id="cart-items-list" class="space-y-3"></div>
+      <div id="cart-items-list" class="space-y-4">
+        </div>
       
-      <label class="flex items-center gap-4 p-4 bg-zinc-50 rounded-2xl cursor-pointer hover:bg-zinc-100 transition-all border border-zinc-100 group">
-        <input type="checkbox" id="extra-cheese" class="w-5 h-5 accent-red-600" />
+      <label class="flex items-center gap-4 p-4 bg-zinc-50 rounded-2xl cursor-pointer hover:bg-zinc-100 transition-all border border-zinc-100 group mt-6">
+        <input type="checkbox" id="extra-cheese" class="w-5 h-5 accent-roger-green" />
         <div class="flex flex-col">
           <span class="text-[11px] font-black uppercase text-zinc-900 tracking-wider">¿Añadir Orilla de Queso?</span>
-          <span class="text-[9px] text-zinc-400 uppercase font-bold">Gratis Martes y Jueves</span>
+          <span class="text-[9px] text-zinc-400 uppercase font-bold italic">Gratis Martes y Jueves (Med y Gde)</span>
         </div>
       </label>
 
       <div class="mt-8 pt-6 border-t border-dashed border-zinc-200 flex justify-between items-end">
         <div>
           <p class="text-[10px] font-black uppercase tracking-widest text-zinc-400">Total a Pagar</p>
-          <p id="pizza-price" class="text-5xl font-black text-zinc-900 leading-none italic mt-1">$0</p>
+          <p id="pizza-price" class="text-5xl font-black text-zinc-900 leading-none italic mt-1 tracking-tighter">$0</p>
         </div>
-        <div class="text-right">
-            <span class="bg-red-50 text-red-600 text-[10px] font-black px-3 py-1 rounded-full uppercase italic leading-none">Resumen Final</span>
+        <div class="text-right flex flex-col items-end gap-2">
+            <span class="bg-roger-green/10 text-roger-green text-[10px] font-black px-4 py-1.5 rounded-full uppercase italic leading-none">Resumen Gourmet</span>
         </div>
       </div>
     </div>
@@ -38,21 +39,21 @@
       <div class="grid grid-cols-1 gap-4">
         <div class="space-y-2">
           <label class="text-[10px] font-black uppercase tracking-widest text-zinc-400 ml-2">Nombre Completo</label>
-          <input type="text" required name="nombre" placeholder="¿A nombre de quién?" class="w-full bg-zinc-50 border border-zinc-100 rounded-2xl p-4 text-zinc-900 placeholder:text-zinc-300 focus:bg-white focus:border-red-600 outline-none transition-all" />
+          <input type="text" required name="nombre" placeholder="¿A nombre de quién?" class="w-full bg-zinc-50 border border-zinc-100 rounded-2xl p-4 text-zinc-900 focus:bg-white focus:border-roger-green outline-none transition-all" />
         </div>
         
         <div class="space-y-2">
           <label class="text-[10px] font-black uppercase tracking-widest text-zinc-400 ml-2">Dirección de Entrega</label>
-          <input type="text" required name="direccion" placeholder="Calle, número y referencias" class="w-full bg-zinc-50 border border-zinc-100 rounded-2xl p-4 text-zinc-900 placeholder:text-zinc-300 focus:bg-white focus:border-red-600 outline-none transition-all" />
+          <input type="text" required name="direccion" placeholder="Calle, número y referencias" class="w-full bg-zinc-50 border border-zinc-100 rounded-2xl p-4 text-zinc-900 focus:bg-white focus:border-roger-green outline-none transition-all" />
         </div>
 
         <div class="space-y-2">
-          <label class="text-[10px] font-black uppercase tracking-widest text-zinc-400 ml-2 italic">Notas (Ej: Mitad y Mitad +$20)</label>
-          <textarea name="notas" placeholder="¿Alguna indicación extra o estaciones elegidas?" class="w-full bg-zinc-50 border border-zinc-100 rounded-2xl p-4 text-zinc-900 placeholder:text-zinc-300 focus:bg-white focus:border-red-600 outline-none transition-all resize-none h-20"></textarea>
+          <label class="text-[10px] font-black uppercase tracking-widest text-zinc-400 ml-2 italic">Notas (Ej: Estaciones o Mitad y Mitad)</label>
+          <textarea name="notas" placeholder="¿Alguna indicación extra para tu pedido?" class="w-full bg-zinc-50 border border-zinc-100 rounded-2xl p-4 text-zinc-900 focus:bg-white focus:border-roger-green outline-none transition-all resize-none h-24"></textarea>
         </div>
       </div>
 
-      <div class="space-y-2">
+      <div class="space-y-3">
         <label class="text-[10px] font-black uppercase tracking-widest text-zinc-400 ml-2 text-center block">Método de Pago</label>
         <div class="grid grid-cols-2 gap-3">
           <label class="cursor-pointer">
@@ -66,49 +67,144 @@
         </div>
       </div>
 
-      <button type="submit" class="w-full bg-red-600 hover:bg-red-700 text-white font-black py-5 rounded-[2rem] transition-all shadow-xl shadow-red-600/20 uppercase italic text-sm tracking-widest mt-4">
-        Enviar pedido vía WhatsApp
+      <button type="submit" class="w-full bg-roger-green hover:bg-zinc-900 text-white font-black py-6 rounded-[2.2rem] transition-all shadow-xl shadow-roger-green/20 uppercase italic text-sm tracking-[0.2em] mt-4">
+        Confirmar por WhatsApp
       </button>
     </form>
   </div>
 </div>
-
-<script>
-  document.getElementById('close-modal')?.addEventListener('click', () => {
+<script is:inline>
+  /**
+   * Cierra el modal de pedido
+   */
+  const closeModal = () => {
     document.getElementById('order-modal')?.classList.add('hidden');
-  });
+  };
 
-  const form = document.getElementById('order-form') as HTMLFormElement;
-  form?.addEventListener('submit', (e) => {
-    e.preventDefault();
-    const formData = new FormData(form);
-    const cart = (window as any).cart || [];
-    const extraCheese = (document.getElementById('extra-cheese') as HTMLInputElement).checked;
+  /**
+   * ACTUALIZACIÓN UNIVERSAL DE LA UI
+   * Sincroniza el contador del Navbar, la lista del Modal y el precio Total.
+   */
+  window.updateCartUI = function() {
+    const cart = window.cart || [];
     
-    // Detectamos si el carrito tiene productos con refresco gratis
-    const tieneRefresco2L = cart.some((p: any) => p.nombre.includes('Barra') || p.nombre.includes('Cuadrada'));
-    const tieneRefresco2_5L = cart.some((p: any) => p.nombre.includes('Rectangular'));
-
-    let productosTexto = cart.map((p: any) => `- ${p.nombre} (${p.tam})`).join('%0A');
-    let total = cart.reduce((acc: number, curr: any) => acc + curr.precio, 0);
+    // 1. Actualizar el contador del Navbar
+    const cartCounter = document.getElementById('cart-counter');
+    const cartCounterContainer = document.getElementById('cart-counter-container');
     
-    let mensaje = `*NUEVO PEDIDO - ROGER PIZZAS*%0A` +
-                  `----------------------------%0A` +
-                  `*Cliente:* ${formData.get('nombre')}%0A` +
-                  `*Dirección:* ${formData.get('direccion')}%0A` +
-                  `*Pago:* ${formData.get('pago')}%0A` +
-                  `*Orilla de Queso:* ${extraCheese ? 'SÍ (Sujeto a promo)' : 'NO'}%0A` +
-                  `*Notas:* ${formData.get('notas') || 'Ninguna'}%0A%0A` +
-                  `*Productos:*%0A${productosTexto}%0A%0A`;
+    const totalItems = cart.reduce((acc, item) => acc + item.cantidad, 0);
+    
+    if (cartCounter && cartCounterContainer) {
+      if (totalItems > 0) {
+        cartCounter.innerText = totalItems;
+        cartCounterContainer.classList.remove('hidden');
+      } else {
+        cartCounterContainer.classList.add('hidden');
+      }
+    }
 
-    // Añadir avisos de refresco gratis según el producto
-    if (tieneRefresco2L) mensaje += `🎁 *INCLUYE:* Refresco 2 Lts GRATIS%0A`;
-    if (tieneRefresco2_5L) mensaje += `🎁 *INCLUYE:* Refresco 2.5 Lts GRATIS%0A`;
+    // 2. Renderizar la lista dentro del modal
+    const list = document.getElementById('cart-items-list');
+    const priceDisplay = document.getElementById('pizza-price');
 
-    mensaje += `*TOTAL:* $${total}%0A` +
-               `----------------------------%0A` +
-               `_Nota: Pizzas redondas mitad y mitad +$20 c/u_`;
+    if (list) {
+      if (cart.length === 0) {
+        list.innerHTML = `
+          <div class="py-10 text-center">
+            <p class="text-[10px] font-black uppercase text-zinc-300 tracking-[0.2em]">Tu carrito está vacío</p>
+          </div>
+        `;
+      } else {
+        list.innerHTML = cart.map((item, index) => `
+          <div class="flex justify-between items-center bg-zinc-50 p-4 rounded-2xl border border-zinc-100 animate-fade-in">
+            <div class="max-w-[60%]">
+              <p class="font-black text-zinc-900 text-[11px] uppercase italic leading-tight">${item.nombre}</p>
+              <p class="text-[9px] text-zinc-400 font-bold uppercase tracking-widest mt-1">${item.tam}</p>
+            </div>
+            <div class="flex items-center gap-3">
+              <div class="flex items-center bg-white border border-zinc-200 rounded-xl overflow-hidden shadow-sm">
+                  <button onclick="updateQty(${index}, -1)" class="px-3 py-1 hover:bg-zinc-100 text-zinc-400 font-bold transition-colors">-</button>
+                  <span class="px-2 text-[11px] font-black text-zinc-900">${item.cantidad}</span>
+                  <button onclick="updateQty(${index}, 1)" class="px-3 py-1 hover:bg-zinc-100 text-roger-green font-bold transition-colors">+</button>
+              </div>
+              <p class="font-black text-zinc-900 italic min-w-[55px] text-right text-sm">$${item.precio * item.cantidad}</p>
+            </div>
+          </div>
+        `).join('');
+      }
+    }
 
-    window.open(`https://wa.me/2721318273?text=${mensaje}`, '_blank');
+    // 3. Actualizar Precio Total
+    const total = cart.reduce((acc, curr) => acc + (curr.precio * curr.cantidad), 0);
+    if (priceDisplay) priceDisplay.innerText = `$${total}`;
+  };
+
+  /**
+   * Actualiza la cantidad de un item o lo elimina
+   */
+  window.updateQty = function(index, change) {
+    if (!window.cart || !window.cart[index]) return;
+    
+    window.cart[index].cantidad += change;
+    
+    if (window.cart[index].cantidad <= 0) {
+      window.cart.splice(index, 1);
+    }
+    
+    // Llamamos a la actualización única
+    window.updateCartUI();
+    
+    if (window.cart.length === 0) closeModal();
+  };
+
+  // ASOCIACIÓN DE EVENTOS AL CARGAR
+  document.addEventListener('DOMContentLoaded', () => {
+    // Inicializar carrito si no existe
+    if (!window.cart) window.cart = [];
+    
+    // Primera carga de la UI
+    window.updateCartUI();
+
+    // Cerrar modal
+    document.getElementById('close-modal')?.addEventListener('click', closeModal);
+
+    // Abrir modal desde el botón del Navbar
+    document.getElementById('open-cart')?.addEventListener('click', () => {
+      window.updateCartUI();
+      document.getElementById('order-modal')?.classList.remove('hidden');
+    });
+
+    // Enviar pedido vía WhatsApp
+    const form = document.getElementById('order-form');
+    form?.addEventListener('submit', (e) => {
+      e.preventDefault();
+      const formData = new FormData(form);
+      const cart = window.cart || [];
+      const extraCheese = document.getElementById('extra-cheese')?.checked;
+      
+      const tieneRefresco2L = cart.some((p) => p.nombre.includes('Barra') || p.nombre.includes('Cuadrada'));
+      const tieneRefresco2_5L = cart.some((p) => p.nombre.includes('Rectangular'));
+
+      let productosTexto = cart.map((p) => `*${p.cantidad}x* ${p.nombre}%0A   _(${p.tam})_`).join('%0A%0A');
+      let total = cart.reduce((acc, curr) => acc + (curr.precio * curr.cantidad), 0);
+      
+      let mensaje = `*NUEVO PEDIDO - ROGER PIZZAS*%0A` +
+                    `----------------------------%0A` +
+                    `👤 *Cliente:* ${formData.get('nombre')}%0A` +
+                    `📍 *Dirección:* ${formData.get('direccion')}%0A` +
+                    `💳 *Pago:* ${formData.get('pago')}%0A` +
+                    `🧀 *Orilla Queso:* ${extraCheese ? 'SÍ' : 'NO'}%0A` +
+                    `📝 *Notas:* ${formData.get('notas') || 'Sin notas'}%0A%0A` +
+                    `🍕 *Detalle:*%0A${productosTexto}%0A%0A`;
+
+      if (tieneRefresco2L) mensaje += `🎁 *REGALO:* 1 Refresco 2Lts%0A`;
+      if (tieneRefresco2_5L) mensaje += `🎁 *REGALO:* 1 Refresco 2.5Lts%0A`;
+
+      mensaje += `💰 *TOTAL A PAGAR: $${total}*%0A` +
+                 `----------------------------%0A` +
+                 `_¡Gracias por elegir Roger Pizzas!_`;
+
+      window.open(`https://wa.me/2721318273?text=${mensaje}`, '_blank');
+    });
   });
 </script>

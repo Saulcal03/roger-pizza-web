@@ -1,0 +1,65 @@
+---
+// src/components/Toast.astro
+---
+<div id="toast-container" class="fixed bottom-10 right-10 z-[200] flex flex-col gap-3 pointer-events-none">
+  </div>
+
+<script is:inline>
+  /**
+   * Crea y muestra una notificación tipo Toast
+   * @param {string} message - El mensaje a mostrar
+   * @param {string} type - 'success' o 'error'
+   */
+  window.showToast = function(message, type = 'success') {
+    const container = document.getElementById('toast-container');
+    if (!container) return;
+
+    const toast = document.createElement('div');
+    
+    // Estilos base y animaciones
+    toast.className = `
+      pointer-events-auto
+      flex items-center gap-3 
+      bg-zinc-900 text-white 
+      px-6 py-4 rounded-[1.5rem] 
+      shadow-2xl border border-white/10
+      animate-toast-in transition-all duration-500
+      min-w-[300px]
+    `;
+
+    const icon = type === 'success' ? '🍕' : '❌';
+    
+    toast.innerHTML = `
+      <span class="text-xl">${icon}</span>
+      <div class="flex flex-col">
+        <p class="text-[10px] font-black uppercase tracking-[0.2em] text-roger-green">Roger Pizzas</p>
+        <p class="text-xs font-bold">${message}</p>
+      </div>
+    `;
+
+    container.appendChild(toast);
+
+    // Eliminar el toast después de 3 segundos
+    setTimeout(() => {
+      toast.style.opacity = '0';
+      toast.style.transform = 'translateX(100px)';
+      setTimeout(() => toast.remove(), 500);
+    }, 3000);
+  };
+</script>
+
+<style>
+  @keyframes toast-in {
+    from { 
+      opacity: 0; 
+      transform: translateX(100px) scale(0.9); 
+    }
+    to { 
+      opacity: 1; 
+      transform: translateX(0) scale(1); 
+    }
+  }
+  .animate-toast-in {
+    animation: toast-in 0.5s cubic-bezier(0.23, 1, 0.32, 1) forwards;
+  }
+</style>

@@ -1,272 +1,275 @@
 ---
 import Layout from '../layouts/Layout.astro';
 import Navbar from '../components/Navbar.astro';
-import PizzaCard from '../components/PizzaCard.astro';
 import OrderModal from '../components/OrderModal.astro';
+import Toast from '../components/Toast.astro';
 import { menu } from '../data/menu.js'; 
+import FlavorGallery from '../components/FlavorGallery.astro';
+
+const tamaños = [
+  { nombre: "Chica", precio: 180, icon: "🍕" },
+  { nombre: "Mediana", precio: 265, icon: "🍕" },
+  { nombre: "Grande", precio: 335, icon: "🍕" },
+  { nombre: "Familiar", precio: 395, icon: "🍕" }
+];
+const categorias = ["Todos", "Carnes", "Tropical", "Picositas", "Vegetales", "Clasicas", "Mariscos"];
 ---
 
-<Layout title="Roger Pizzas | Simplemente, la mejor">
+<Layout title="Roger Pizzas | Experiencia Premium">
   <Navbar />
   <OrderModal />
+  <Toast /> 
   
-  <main class="bg-[#F9F8F6] text-zinc-800 pt-24 min-h-screen font-sans">
-    
-    <section id="hero" class="py-20 px-6 container mx-auto grid lg:grid-cols-2 gap-12 items-center">
-      <div class="space-y-6">
-        <h2 class="text-red-700 font-bold tracking-[0.3em] uppercase text-xs">Simplemente, la mejor pizza</h2>
-        <h1 class="text-7xl md:text-8xl font-black italic uppercase leading-none tracking-tighter text-zinc-900">
-          PIZZA <span class="text-red-600">BARRA</span>
-        </h1>
-        <div class="flex flex-col gap-2">
-            <p class="text-xl text-zinc-500 font-medium border-l-4 border-red-600 pl-4 uppercase">12 Rebanadas | 2 Estaciones</p>
-            <p class="text-red-600 font-black italic uppercase text-sm ml-5">Orilla rellena de queso</p>
-        </div>
-        
-        <div class="flex items-center gap-6 pt-4">
-          <span class="text-6xl font-black text-zinc-900 leading-none">$290</span>
-          <div class="bg-red-50 border border-red-200 p-3 rounded-2xl">
-            <p class="text-red-600 font-black text-lg uppercase leading-tight italic">¡GRATIS!</p>
-            <p class="text-zinc-600 text-[10px] font-bold uppercase tracking-widest">1 REFRESCO 2LTS</p>
-          </div>
-        </div>
-      </div>
-      <div class="relative">
-        <div class="absolute -inset-4 bg-red-600/5 rounded-[4rem] rotate-3"></div>
-        <img src="https://images.unsplash.com/photo-1513104890138-7c749659a591?q=80&w=800" class="relative rounded-[3rem] shadow-2xl -rotate-2 object-cover h-[450px] w-full" alt="Pizza Barra" />
-      </div>
-    </section>
+  <main class="bg-[#f8f9fa] text-zinc-800 pt-24 min-h-screen font-sans selection:bg-roger-green selection:text-white">
 
-    <section class="py-6 bg-zinc-900 text-white font-medium text-center uppercase tracking-[0.2em] text-sm">
-      Orilla rellena <span class="text-red-500 font-black italic">GRATIS</span> Martes y Jueves <span class="opacity-50 text-xs">(Med. y Gde.)</span>
-    </section>
-
-    <section id="especialidades" class="py-24 container mx-auto px-6">
-      <div class="text-center mb-20">
-        <span class="text-red-600 font-bold tracking-widest text-xs uppercase">Nuestro Menú</span>
-        <h2 class="text-5xl md:text-6xl font-black italic uppercase text-zinc-900 mt-2">ESPECIALIDADES <span class="text-red-600">2X1</span></h2>
-        <p class="text-zinc-400 font-medium uppercase tracking-widest text-[10px] mt-4">Aplica en pizzas redondas seleccionadas</p>
+    <section id="builder" class="py-20 relative overflow-hidden">
+      <div class="absolute top-0 left-0 w-full h-full -z-10 opacity-40">
+        <div class="absolute top-[-10%] left-[-10%] w-[40%] h-[40%] bg-roger-green/10 rounded-full blur-[120px]"></div>
+        <div class="absolute bottom-[-10%] right-[-10%] w-[40%] h-[40%] bg-orange-400/10 rounded-full blur-[120px]"></div>
       </div>
 
-      <div class="space-y-32">
-        <div>
-          <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-10">
-            {menu.especialidades.pizzas.map((pizza) => (
-              <PizzaCard 
-                nombre={pizza.nombre} 
-                ingredientes={pizza.ingredientes} 
-                precios={menu.especialidades.precios}
-                imagen="https://images.unsplash.com/photo-1604382354936-07c5d9983bd3?q=80&w=600" 
-              />
-            ))}
-          </div>
-        </div>
-
-        <div class="grid md:grid-cols-2 gap-10">
-            {menu.tropical.pizzas.map((pizza) => (
-              <PizzaCard 
-                nombre={pizza.nombre} 
-                ingredientes={pizza.ingredientes} 
-                precios={menu.tropical.precios}
-                imagen="https://images.unsplash.com/photo-1565299624946-b28f40a0ae38?q=80&w=600" 
-              />
-            ))}
-            {menu.marinera.pizzas.map((pizza) => (
-              <PizzaCard 
-                nombre={pizza.nombre} 
-                ingredientes={pizza.ingredientes} 
-                precios={menu.marinera.precios}
-                imagen="https://images.unsplash.com/photo-1555072956-7758afb20e8f?q=80&w=600" 
-              />
-            ))}
-        </div>
-      </div>
-    </section>
-
-    <section id="especiales-casa" class="py-24 bg-zinc-100/50 border-y border-zinc-200">
       <div class="container mx-auto px-6">
-        <div class="text-center mb-16">
-          <span class="text-red-600 font-bold tracking-[0.3em] uppercase text-xs">Tamaños Familiares</span>
-          <h2 class="text-5xl font-black italic uppercase text-zinc-900 mt-2">Especialidades de la Casa</h2>
-          <p class="text-zinc-500 font-medium mt-4 italic">No aplica 2x1 | Incluyen <span class="text-zinc-900 font-bold">Refresco GRATIS</span></p>
+        <div class="flex flex-col items-center text-center mb-12 animate-slide-up">
+          <span class="inline-block px-4 py-1.5 mb-4 text-[10px] font-bold tracking-[0.4em] uppercase bg-roger-green/10 text-roger-green rounded-full">
+            Configurador Exclusivo
+          </span>
+          <h2 class="text-5xl md:text-7xl font-black text-zinc-900 tracking-tight leading-none mb-4">
+            Crea tu <span class="text-roger-green italic font-serif">Obra Maestra</span>
+          </h2>
+          <p class="text-zinc-500 max-w-lg text-sm font-medium">Selecciona el tamaño ideal y combina los sabores que más te gustan en nuestro formato 2x1.</p>
         </div>
 
-        <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
-          
-          <div class="pizza-card bg-white rounded-[2.5rem] p-8 shadow-xl border border-zinc-100 flex flex-col justify-between hover:scale-[1.02] transition-all duration-300">
-            <div>
-              <div class="flex justify-between items-start mb-6">
-                <h3 class="text-3xl font-black italic uppercase text-zinc-900 leading-none">Pizza<br/>Barra</h3>
-                <span class="bg-zinc-900 text-white text-[9px] font-black px-3 py-1 rounded-full uppercase italic">12 Rebanadas</span>
-              </div>
-              <p class="text-zinc-400 text-[10px] font-bold uppercase tracking-widest mb-6 leading-tight">Orilla rellena de queso | 2 Estaciones</p>
-              <div class="bg-red-50 p-4 rounded-2xl border border-red-100 mb-8 text-center">
-                 <p class="text-red-600 font-black text-[10px] uppercase tracking-widest mb-1 italic">🎁 GRATIS</p>
-                 <p class="text-zinc-900 font-bold text-xs uppercase">1 Refresco 2 Lts</p>
-              </div>
-            </div>
-            <div class="space-y-4">
-              <label class="flex items-center justify-between p-4 bg-zinc-50 rounded-2xl border border-zinc-100 cursor-pointer">
-                <span class="text-[10px] font-black uppercase text-zinc-400 italic">Precio</span>
-                <input type="radio" name="promo-barra" value="Barra - $290" checked class="hidden peer" />
-                <span class="text-3xl font-black text-zinc-900 italic">$290</span>
-              </label>
-              <button class="add-btn w-full bg-zinc-900 hover:bg-red-600 text-white font-black py-4 rounded-2xl transition-all uppercase italic text-[11px] tracking-widest shadow-lg active:scale-95">
-                🛒 Añadir al pedido
+        <div class="max-w-5xl mx-auto">
+          <div id="step-1" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 animate-fade-in-up">
+            {tamaños.map((tam, index) => (
+              <button 
+                class="size-select group relative overflow-hidden bg-white p-8 rounded-[2.5rem] border border-zinc-200/60 shadow-sm hover:shadow-2xl hover:border-roger-green hover:-translate-y-2 transition-all duration-500 ease-out"
+                data-size={tam.nombre}
+                style={`animation-delay: ${index * 100}ms`}
+              >
+                <div class="absolute top-0 left-0 w-full h-1 bg-roger-green scale-x-0 group-hover:scale-x-100 transition-transform duration-500 origin-left"></div>
+                <p class="text-[10px] font-bold text-zinc-400 uppercase tracking-[0.2em] mb-6 group-hover:text-roger-green transition-colors">{tam.nombre}</p>
+                <div class="text-4xl mb-4 transform group-hover:scale-110 group-hover:rotate-12 transition-transform duration-500">🍕</div>
+                <p class="text-3xl font-black text-zinc-900 mb-1">${tam.precio}</p>
+                <p class="text-xs font-bold text-zinc-400 group-hover:text-zinc-900 transition-colors uppercase italic">Seleccionar</p>
               </button>
-            </div>
+            ))}
           </div>
 
-          <div class="pizza-card bg-white rounded-[2.5rem] p-8 shadow-xl border border-zinc-100 flex flex-col justify-between hover:scale-[1.02] transition-all duration-300">
-            <div>
-              <div class="flex justify-between items-start mb-6">
-                <h3 class="text-3xl font-black italic uppercase text-zinc-900 leading-none">Pizza<br/>Cuadrada</h3>
-                <span class="bg-zinc-900 text-white text-[9px] font-black px-3 py-1 rounded-full uppercase italic">16 Rebanadas</span>
-              </div>
-              <p class="text-zinc-400 text-[10px] font-bold uppercase tracking-widest mb-6 leading-tight">Orilla rellena de queso | 4 Estaciones</p>
-              <div class="bg-red-50 p-4 rounded-2xl border border-red-100 mb-8 text-center">
-                 <p class="text-red-600 font-black text-[10px] uppercase tracking-widest mb-1 italic">🎁 GRATIS</p>
-                 <p class="text-zinc-900 font-bold text-xs uppercase">1 Refresco 2 Lts</p>
-              </div>
-            </div>
-            <div class="space-y-4">
-              <label class="flex items-center justify-between p-4 bg-zinc-50 rounded-2xl border border-zinc-100 cursor-pointer">
-                <span class="text-[10px] font-black uppercase text-zinc-400 italic">Precio</span>
-                <input type="radio" name="promo-cuadrada" value="Cuadrada - $315" checked class="hidden peer" />
-                <span class="text-3xl font-black text-zinc-900 italic">$315</span>
-              </label>
-              <button class="add-btn w-full bg-zinc-900 hover:bg-red-600 text-white font-black py-4 rounded-2xl transition-all uppercase italic text-[11px] tracking-widest shadow-lg active:scale-95">
-                🛒 Añadir al pedido
-              </button>
+          <div id="step-2" class="hidden space-y-12 animate-fade-in">
+            <div class="bg-white/80 backdrop-blur-xl border border-white rounded-[3.5rem] p-8 md:p-12 shadow-2xl">
+                <div class="flex flex-col md:flex-row justify-between items-center gap-8 mb-12">
+                    <div class="text-center md:text-left">
+                        <h3 class="text-3xl font-black text-zinc-900 tracking-tighter italic uppercase">Elige tus Sabores</h3>
+                        <p id="selection-status" class="text-roger-green font-bold text-xs uppercase tracking-widest mt-2 flex items-center gap-2">
+                           <span class="relative flex h-2 w-2">
+                             <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-roger-green opacity-75"></span>
+                             <span class="relative inline-flex rounded-full h-2 w-2 bg-roger-green"></span>
+                           </span>
+                           Esperando selección...
+                        </p>
+                    </div>
+                    
+                    <div class="flex items-center gap-4 bg-zinc-100/50 p-4 rounded-full border border-zinc-200/50">
+                        <div id="slot-1" class="w-16 h-16 rounded-full bg-white shadow-inner flex items-center justify-center text-2xl transition-all duration-500 border-2 border-transparent">🍕</div>
+                        <div class="text-zinc-300 font-light text-3xl">+</div>
+                        <div id="slot-2" class="w-16 h-16 rounded-full bg-white shadow-inner flex items-center justify-center text-2xl transition-all duration-500 border-2 border-transparent">🍕</div>
+                    </div>
+                </div>
+
+                <div class="flex flex-wrap justify-center gap-3 mb-10">
+                    {categorias.map(cat => (
+                        <button class="flavor-filter px-6 py-2.5 rounded-full text-[10px] font-bold uppercase tracking-widest border border-zinc-200 bg-white hover:bg-zinc-900 hover:text-white hover:border-zinc-900 transition-all active:scale-95 shadow-sm" data-filter={cat}>
+                          {cat}
+                        </button>
+                    ))}
+                </div>
+
+                <div id="flavors-grid" class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+                    {menu.sabores.map(sabor => (
+                        <div class="flavor-card group cursor-pointer" 
+                             data-category={sabor.categoria} 
+                             data-name={sabor.nombre} 
+                             data-type={sabor.tipo}>
+                            <div class="relative h-44 bg-zinc-100 rounded-[2rem] mb-4 overflow-hidden shadow-sm group-hover:shadow-xl transition-all duration-500">
+                                 <img src="https://images.unsplash.com/photo-1513104890138-7c749659a591?q=80&w=300" 
+                                      class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-1000" 
+                                      alt={sabor.nombre}/>
+                                 <div class="absolute inset-0 bg-gradient-to-t from-zinc-900/60 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500 flex items-end p-6">
+                                     <span class="text-white text-[10px] font-bold uppercase tracking-widest">Añadir sabor</span>
+                                 </div>
+                            </div>
+                            <h4 class="text-sm font-black text-zinc-900 uppercase italic px-2 group-hover:text-roger-green transition-colors leading-tight">{sabor.nombre}</h4>
+                            <p class="text-[10px] text-zinc-400 font-medium uppercase tracking-tighter px-2 mt-1 line-clamp-2 leading-relaxed">
+                                {sabor.ingredientes}
+                            </p>
+                        </div>
+                    ))}
+                </div>
+
+                <div id="action-container" class="mt-16 flex flex-col items-center gap-6 border-t border-zinc-100 pt-12">
+                    <button id="add-combo-to-cart" class="hidden w-full max-w-lg bg-roger-green text-white font-black py-7 rounded-full shadow-[0_20px_50px_rgba(46,125,50,0.3)] hover:bg-zinc-900 hover:shadow-none transition-all duration-500 uppercase tracking-[0.2em] text-xs active:scale-95">
+                        Confirmar Orden Exclusiva
+                    </button>
+                    <button id="reset-builder-btn" class="flex items-center gap-2 text-[10px] font-bold text-zinc-400 hover:text-red-500 transition-colors uppercase tracking-widest group">
+                        <svg class="w-4 h-4 group-hover:rotate-180 transition-transform duration-700" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" /></svg>
+                        Empezar de nuevo
+                    </button>
+                </div>
             </div>
           </div>
-
-          <div class="pizza-card bg-white rounded-[2.5rem] p-8 shadow-xl border border-red-600/20 flex flex-col justify-between border-t-4 border-t-red-600 hover:scale-[1.02] transition-all duration-300">
-            <div>
-              <div class="flex justify-between items-start mb-6">
-                <h3 class="text-3xl font-black italic uppercase text-zinc-900 leading-none">Pizza<br/>Rectangular</h3>
-                <span class="bg-red-600 text-white text-[9px] font-black px-3 py-1 rounded-full uppercase italic">24 Rebanadas</span>
-              </div>
-              <p class="text-zinc-400 text-[10px] font-bold uppercase tracking-widest mb-6 leading-tight">Orilla rellena de queso | 4 Estaciones</p>
-              <div class="bg-red-50 p-4 rounded-2xl border border-red-100 mb-8 text-center">
-                 <p class="text-red-600 font-black text-[10px] uppercase tracking-widest mb-1 italic">🎁 GRATIS</p>
-                 <p class="text-zinc-900 font-bold text-xs uppercase">1 Refresco 2.5 Lts</p>
-              </div>
-            </div>
-            <div class="space-y-4">
-              <label class="flex items-center justify-between p-4 bg-zinc-50 rounded-2xl border border-zinc-100 cursor-pointer">
-                <span class="text-[10px] font-black uppercase text-zinc-400 italic">Precio</span>
-                <input type="radio" name="promo-rectangular" value="Rectangular - $395" checked class="hidden peer" />
-                <span class="text-3xl font-black text-zinc-900 italic">$395</span>
-              </label>
-              <button class="add-btn w-full bg-red-600 hover:bg-zinc-900 text-white font-black py-4 rounded-2xl transition-all uppercase italic text-[11px] tracking-widest shadow-lg active:scale-95">
-                🛒 Añadir al pedido
-              </button>
-            </div>
-          </div>
-
         </div>
       </div>
     </section>
-
-    <footer id="contacto" class="bg-white border-t border-zinc-200 text-zinc-900 py-24 px-6 mt-20">
-      <div class="container mx-auto grid md:grid-cols-2 gap-16">
-        <div class="space-y-8">
-          <h2 class="text-5xl font-black tracking-tighter italic uppercase">Roger<br/><span class="text-red-600">Pizzas</span></h2>
-          <p class="text-zinc-500 font-medium max-w-xs uppercase text-xs leading-loose tracking-widest">
-            Calle San Jose, Col. La Hacienda, Jalapilla Veracruz
-          </p>
-        </div>
-        <div class="flex flex-col justify-end space-y-6 text-right">
-          <p class="text-4xl font-light tracking-tighter italic">272-688-5145</p>
-          <a href="https://wa.me/2721318273" class="text-red-600 text-2xl font-black uppercase italic hover:text-red-700 transition-colors">WhatsApp: 272-131-8273</a>
-          <p class="text-xs font-bold text-zinc-400 tracking-[0.3em] uppercase">Horario: 11:00 AM - 10:00 PM</p>
-        </div>
-      </div>
-    </footer>
+    
+    <FlavorGallery/>
   </main>
 </Layout>
 
 <script>
-  declare global {
-    interface Window {
-      cart: any[];
-    }
-  }
+  import { menu } from '../data/menu.js';
 
-  let cart: any[] = [];
-  window.cart = cart;
+  // Interfaz de estado
+  let currentSelection: any = { size: '', p1: null, p2: null, price: 0 };
 
-  function updateCartUI() {
-    const counter = document.getElementById('cart-counter');
-    const counterContainer = document.getElementById('cart-counter-container');
-    
-    if (counter && counterContainer) {
-      counter.innerText = cart.length.toString();
-      counterContainer.classList.toggle('hidden', cart.length === 0);
-    }
-  }
+  const step1 = document.getElementById('step-1');
+  const step2 = document.getElementById('step-2');
+  const addComboBtn = document.getElementById('add-combo-to-cart');
+  const status = document.getElementById('selection-status');
+  const slot1 = document.getElementById('slot-1');
+  const slot2 = document.getElementById('slot-2');
 
-  document.addEventListener('click', (e) => {
-    const target = e.target as HTMLElement;
-    const addButton = target.closest('.add-btn');
-    
-    if (addButton) {
-      const card = addButton.closest('.pizza-card');
-      const nombreElt = card?.querySelector('h3') as HTMLElement;
-      const nombre = nombreElt.innerText;
-      const selectedRadio = card?.querySelector('input[type="radio"]:checked') as HTMLInputElement;
+  // 1. TAMAÑO
+  document.querySelectorAll('.size-select').forEach(btn => {
+    btn.addEventListener('click', () => {
+      currentSelection.size = (btn as HTMLElement).dataset.size;
+      if (step1) {
+        (step1 as HTMLElement).style.opacity = '0';
+        (step1 as HTMLElement).style.transform = 'translateY(-20px)';
+      }
+      setTimeout(() => {
+        step1?.classList.add('hidden');
+        step2?.classList.remove('hidden');
+        if (status) status.innerHTML = `<span class="text-zinc-400">Tamaño: ${currentSelection.size}</span> — Elige la 1ra Pizza`;
+      }, 400);
+    });
+  });
+
+  // 2. SABORES
+  document.querySelectorAll('.flavor-card').forEach(card => {
+    card.addEventListener('click', () => {
+      const name = (card as HTMLElement).dataset.name;
+      const type = (card as HTMLElement).dataset.type;
+
+      if (!currentSelection.p1) {
+        currentSelection.p1 = { name, type };
+        animateSlot(slot1, "✅");
+        if (status) status.innerHTML = `<span class="text-zinc-900">¡Excelente!</span> — Ahora elige tu pizza de regalo`;
+      } else if (!currentSelection.p2) {
+        currentSelection.p2 = { name, type };
+        animateSlot(slot2, "✅");
+        
+        const sizeKey = currentSelection.size.toLowerCase();
+        
+        // Uso de casting "as any" para evitar errores de TypeScript en VS Code
+        const p1Price = (menu.tarifas as any)[currentSelection.p1.type][sizeKey];
+        const p2Price = (menu.tarifas as any)[currentSelection.p2.type][sizeKey];
+        currentSelection.price = Math.max(p1Price, p2Price);
+
+        if (status) status.innerHTML = `<span class="text-roger-green italic">¡Combo Perfecto Creado!</span>`;
+        if (addComboBtn) {
+          addComboBtn.innerText = `Confirmar Combo 2x1 — $${currentSelection.price}.00`;
+          addComboBtn.classList.remove('hidden');
+          addComboBtn.classList.add('animate-slide-up');
+        }
+      }
+    });
+  });
+
+  // 3. ENVÍO AL CARRITO (RESTAURADO)
+  addComboBtn?.addEventListener('click', () => {
+    if (currentSelection.p1 && currentSelection.p2 && currentSelection.size) {
+      const comboName = `${currentSelection.p1.name} + ${currentSelection.p2.name}`;
       
-      if (!selectedRadio) {
-        alert('⚠️ Por favor, selecciona un tamaño antes de añadir.');
-        return;
+      const globalWindow = (window as any);
+      if (!globalWindow.cart) globalWindow.cart = [];
+      
+      globalWindow.cart.push({
+          nombre: `Combo 2x1: ${comboName}`,
+          tam: currentSelection.size,
+          precio: currentSelection.price,
+          cantidad: 1
+      });
+
+      if (typeof globalWindow.updateCartUI === 'function') {
+        globalWindow.updateCartUI();
       }
 
-      const [tam, precioStr] = selectedRadio.value.split(' - ');
-      const precio = parseInt(precioStr.replace('$', ''));
-      
-      cart.push({ nombre, tam, precio });
-      
-      const originalContent = addButton.innerHTML;
-      addButton.classList.add('!bg-zinc-900', '!text-white');
-      addButton.innerHTML = '✓ Agregado';
-      
-      setTimeout(() => {
-        addButton.classList.remove('!bg-zinc-900', '!text-white');
-        addButton.innerHTML = originalContent;
-      }, 1000);
+      if (typeof globalWindow.showToast === 'function') {
+        globalWindow.showToast(comboName);
+      }
 
-      updateCartUI();
+      resetBuilder();
     }
   });
 
-  document.getElementById('open-cart')?.addEventListener('click', () => {
-    if (cart.length === 0) {
-      alert('Tu carrito está vacío. ¡Elige una pizza primero! 🍕');
-      return;
-    }
-    
-    const modal = document.getElementById('order-modal');
-    const itemsList = document.getElementById('cart-items-list');
-    const priceDisplay = document.getElementById('pizza-price');
+  function animateSlot(slot: HTMLElement | null, newIcon: string) {
+    if (!slot) return;
+    slot.style.transform = 'scale(1.3) rotate(15deg)';
+    slot.style.backgroundColor = '#2e7d32'; 
+    slot.style.color = 'white';
+    slot.style.borderColor = '#2e7d32';
+    slot.innerHTML = newIcon;
+    setTimeout(() => {
+        slot.style.transform = 'scale(1) rotate(0deg)';
+    }, 300);
+  }
 
-    if (itemsList) {
-      itemsList.innerHTML = cart.map(item => `
-        <div class="flex justify-between items-center bg-zinc-50 p-3 rounded-xl border border-zinc-100">
-          <div>
-            <p class="font-bold text-zinc-900 text-xs uppercase italic">${item.nombre}</p>
-            <p class="text-[9px] text-zinc-400 font-bold uppercase">${item.tam}</p>
-          </div>
-          <p class="font-black text-zinc-900">$${item.precio}</p>
-        </div>
-      `).join('');
+  function resetBuilder() {
+    currentSelection = { size: '', p1: null, p2: null, price: 0 };
+    if (step1) {
+      step1.classList.remove('hidden');
+      (step1 as HTMLElement).style.opacity = '1';
+      (step1 as HTMLElement).style.transform = 'translateY(0)';
     }
-
-    if (priceDisplay) {
-      const total = cart.reduce((acc, curr) => acc + curr.precio, 0);
-      priceDisplay.innerText = `$${total}`;
-    }
+    step2?.classList.add('hidden');
+    addComboBtn?.classList.add('hidden');
     
-    modal?.classList.remove('hidden');
+    [slot1, slot2].forEach(slot => {
+      if (slot) {
+        slot.innerHTML = '🍕';
+        (slot as HTMLElement).style.backgroundColor = 'white';
+        (slot as HTMLElement).style.color = 'inherit';
+        (slot as HTMLElement).style.borderColor = 'transparent';
+      }
+    });
+  }
+
+  document.getElementById('reset-builder-btn')?.addEventListener('click', resetBuilder);
+
+  // Filtros
+  document.querySelectorAll('.flavor-filter').forEach(btn => {
+    btn.addEventListener('click', (e) => {
+      const filter = (e.target as HTMLElement).dataset.filter;
+      document.querySelectorAll('.flavor-card').forEach(card => {
+        const c = card as HTMLElement;
+        if (filter === "Todos" || c.dataset.category === filter) {
+          c.style.display = 'block';
+        } else {
+          c.style.display = 'none';
+        }
+      });
+    });
   });
 </script>
+
+<style>
+  .animate-fade-in-up { animation: fadeInUp 0.8s cubic-bezier(0.2, 0.8, 0.2, 1) forwards; }
+  .animate-slide-up { animation: slideUp 0.6s cubic-bezier(0.2, 0.8, 0.2, 1) forwards; }
+  .animate-fade-in { animation: fadeIn 0.5s ease-out forwards; }
+  @keyframes fadeInUp { from { opacity: 0; transform: translateY(40px); } to { opacity: 1; transform: translateY(0); } }
+  @keyframes slideUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+  @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+  .flavor-card { transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1); }
+  .backdrop-blur-xl { backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px); }
+</style>

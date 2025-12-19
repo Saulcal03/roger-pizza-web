@@ -1,0 +1,64 @@
+---
+import { menu } from '../data/menu.js';
+
+/** * NOTA: Ahora el código es más simple porque los ingredientes 
+ * vienen directamente en el objeto de cada sabor del menu.js
+ */
+---
+
+<section id="sabores" class="py-24 bg-white">
+  <div class="container mx-auto px-6 max-w-4xl">
+    
+    <div class="text-center mb-24">
+      <span class="text-roger-green font-black tracking-[0.4em] uppercase text-[9px] mb-4 block">Menú 2x1</span>
+      <h2 class="text-5xl font-black uppercase tracking-tighter text-zinc-900 leading-none">
+        Nuestros Sabores
+      </h2>
+    </div>
+
+    <div class="space-y-16">
+      {menu.sabores.map((sabor) => (
+        <div class="group">
+          <div class="flex flex-col md:flex-row md:items-baseline justify-between gap-4">
+            
+            <div class="flex flex-wrap items-baseline gap-4">
+              <h4 class="text-3xl font-black uppercase italic text-zinc-900 group-hover:text-roger-green transition-colors duration-300">
+                {sabor.nombre}
+              </h4>
+              <span class="text-[8px] font-bold text-zinc-400 border border-zinc-200 px-3 py-1 rounded-full uppercase tracking-[0.1em]">
+                {sabor.categoria}
+              </span>
+            </div>
+
+            <div class="hidden md:block flex-grow border-b border-zinc-100 mx-4"></div>
+
+            <div class="flex items-center gap-2">
+              <span class="text-roger-green font-black text-[10px] uppercase tracking-wider">Promo 2x1</span>
+            </div>
+          </div>
+
+          <p class="mt-4 text-zinc-500 text-[12px] leading-relaxed uppercase tracking-[0.05em] max-w-2xl font-medium">
+            {sabor.ingredientes}
+          </p>
+        </div>
+      ))}
+    </div>
+
+    <div class="mt-32 pt-12 border-t border-zinc-50 text-center">
+      <a href="#builder" class="group inline-flex items-center gap-6 text-zinc-900">
+        <span class="text-[11px] font-black uppercase tracking-[0.3em] group-hover:text-roger-green transition-colors">Armar mi pizza ahora</span>
+        <div class="w-12 h-12 rounded-full border border-zinc-900 flex items-center justify-center group-hover:bg-zinc-900 group-hover:text-white transition-all duration-300">
+          <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg>
+        </div>
+      </a>
+    </div>
+
+  </div>
+</section>
+
+<style>
+  /* Fuente del sistema para máxima limpieza y velocidad */
+  #sabores {
+    font-family: system-ui, -apple-system, sans-serif;
+  }
+</style>
