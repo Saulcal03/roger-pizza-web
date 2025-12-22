@@ -1,4 +1,7 @@
 export const menu = {
+  // Definimos el descuento para pizzas individuales (40%)
+  descuentoIndividual: 0.40,
+
   // Definimos los precios base por categoría
   tarifas: {
     estandar: { chica: 180, mediana: 265, grande: 335, familiar: 395 },

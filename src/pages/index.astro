@@ -3,8 +3,10 @@ import Layout from '../layouts/Layout.astro';
 import Navbar from '../components/Navbar.astro';
 import OrderModal from '../components/OrderModal.astro';
 import Toast from '../components/Toast.astro';
-import { menu } from '../data/menu.js'; 
 import FlavorGallery from '../components/FlavorGallery.astro';
+
+// IMPORTAMOS EL NUEVO COMPONENTE
+import Especialidades from '../components/Especialidades.astro';
 
 const tamaños = [
   { nombre: "Chica", precio: 180, icon: "🍕" },
@@ -12,6 +14,7 @@ const tamaños = [
   { nombre: "Grande", precio: 335, icon: "🍕" },
   { nombre: "Familiar", precio: 395, icon: "🍕" }
 ];
+
 const categorias = ["Todos", "Carnes", "Tropical", "Picositas", "Vegetales", "Clasicas", "Mariscos"];
 ---
 
@@ -29,91 +32,87 @@ const categorias = ["Todos", "Carnes", "Tropical", "Picositas", "Vegetales", "Cl
       </div>
 
       <div class="container mx-auto px-6">
-        <div class="flex flex-col items-center text-center mb-12 animate-slide-up">
-          <span class="inline-block px-4 py-1.5 mb-4 text-[10px] font-bold tracking-[0.4em] uppercase bg-roger-green/10 text-roger-green rounded-full">
-            Configurador Exclusivo
-          </span>
-          <h2 class="text-5xl md:text-7xl font-black text-zinc-900 tracking-tight leading-none mb-4">
-            Crea tu <span class="text-roger-green italic font-serif">Obra Maestra</span>
-          </h2>
-          <p class="text-zinc-500 max-w-lg text-sm font-medium">Selecciona el tamaño ideal y combina los sabores que más te gustan en nuestro formato 2x1.</p>
+        <div class="flex flex-col md:flex-row justify-between items-end mb-16 gap-8 animate-slide-up">
+          <div class="text-left">
+            <span class="inline-block px-4 py-1.5 mb-4 text-[10px] font-bold tracking-[0.4em] uppercase bg-roger-green/10 text-roger-green rounded-full">
+              Configurador Exclusivo
+            </span>
+            <h2 class="text-5xl md:text-7xl font-black text-zinc-900 tracking-tight leading-none">
+              Crea tu <span class="text-roger-green italic font-serif">Obra Maestra</span>
+            </h2>
+          </div>
+
+          <div class="flex flex-col items-end gap-3">
+            <p class="text-[9px] font-black uppercase tracking-[0.3em] text-zinc-400 mr-4">Modalidad de Pedido</p>
+            <div class="relative bg-white border border-zinc-200 p-1.5 rounded-full flex items-center w-72 h-16 shadow-xl shadow-zinc-200/50">
+              <div id="mode-slider" class="absolute top-1.5 left-1.5 w-[calc(50%-6px)] h-[calc(100%-12px)] bg-zinc-900 rounded-full transition-all duration-500 cubic-bezier(0.34, 1.56, 0.64, 1) shadow-lg shadow-zinc-900/40"></div>
+              
+              <button id="btn-promo" class="relative z-10 w-1/2 text-[10px] font-black uppercase tracking-widest text-white transition-colors duration-500 flex items-center justify-center gap-2">
+                Combo 2x1 🔥
+              </button>
+              <button id="btn-single" class="relative z-10 w-1/2 text-[10px] font-black uppercase tracking-widest text-zinc-400 transition-colors duration-500 flex items-center justify-center gap-2">
+                Individual 🍕
+              </button>
+            </div>
+          </div>
         </div>
 
         <div class="max-w-5xl mx-auto">
-          <div id="step-1" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 animate-fade-in-up">
-            {tamaños.map((tam, index) => (
-              <button 
-                class="size-select group relative overflow-hidden bg-white p-8 rounded-[2.5rem] border border-zinc-200/60 shadow-sm hover:shadow-2xl hover:border-roger-green hover:-translate-y-2 transition-all duration-500 ease-out"
-                data-size={tam.nombre}
-                style={`animation-delay: ${index * 100}ms`}
-              >
-                <div class="absolute top-0 left-0 w-full h-1 bg-roger-green scale-x-0 group-hover:scale-x-100 transition-transform duration-500 origin-left"></div>
-                <p class="text-[10px] font-bold text-zinc-400 uppercase tracking-[0.2em] mb-6 group-hover:text-roger-green transition-colors">{tam.nombre}</p>
-                <div class="text-4xl mb-4 transform group-hover:scale-110 group-hover:rotate-12 transition-transform duration-500">🍕</div>
-                <p class="text-3xl font-black text-zinc-900 mb-1">${tam.precio}</p>
-                <p class="text-xs font-bold text-zinc-400 group-hover:text-zinc-900 transition-colors uppercase italic">Seleccionar</p>
-              </button>
-            ))}
+          <div id="step-1" class="animate-fade-in-up">
+            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+              {tamaños.map((tam, index) => (
+                <button 
+                  class="size-select group relative overflow-hidden bg-white p-8 rounded-[2.5rem] border border-zinc-200/60 shadow-sm hover:shadow-2xl hover:border-roger-green hover:-translate-y-2 transition-all duration-500"
+                  data-size={tam.nombre}
+                  data-base-price={tam.precio}
+                  style={`animation-delay: ${index * 100}ms`}
+                >
+                  <div class="absolute top-0 left-0 w-full h-1 bg-roger-green scale-x-0 group-hover:scale-x-100 transition-transform duration-500 origin-left"></div>
+                  <p class="text-[10px] font-bold text-zinc-400 uppercase tracking-[0.2em] mb-6 group-hover:text-roger-green transition-colors">{tam.nombre}</p>
+                  <div class="text-4xl mb-4 transform group-hover:scale-110 group-hover:rotate-12 transition-transform duration-500">🍕</div>
+                  <p class="price-display text-3xl font-black text-zinc-900 mb-1 transition-all duration-500">${tam.precio}</p>
+                  <p class="text-xs font-bold text-zinc-400 group-hover:text-zinc-900 transition-colors uppercase italic">Seleccionar</p>
+                </button>
+              ))}
+            </div>
           </div>
 
-          <div id="step-2" class="hidden space-y-12 animate-fade-in">
-            <div class="bg-white/80 backdrop-blur-xl border border-white rounded-[3.5rem] p-8 md:p-12 shadow-2xl">
-                <div class="flex flex-col md:flex-row justify-between items-center gap-8 mb-12">
+          <div id="step-2" class="hidden space-y-10 animate-fade-in">
+             <button id="back-to-step-1" class="flex items-center gap-3 text-[10px] font-bold text-zinc-400 hover:text-roger-green transition-all uppercase tracking-[0.2em] group">
+              <div class="w-8 h-8 rounded-full bg-white border border-zinc-100 flex items-center justify-center group-hover:border-roger-green shadow-sm">
+                <svg xmlns="http://www.w3.org/2000/svg" class="w-3 h-3 transform group-hover:-translate-x-0.5 transition-transform" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="4"><path stroke-linecap="round" stroke-linejoin="round" d="M15 19l-7-7 7-7" /></svg>
+              </div>
+              Regresar al Tamaño
+            </button>
+
+            <div class="bg-white/90 backdrop-blur-2xl border border-white rounded-[4rem] p-8 md:p-14 shadow-2xl">
+                <div class="flex flex-col md:flex-row justify-between items-center gap-10 mb-16">
                     <div class="text-center md:text-left">
-                        <h3 class="text-3xl font-black text-zinc-900 tracking-tighter italic uppercase">Elige tus Sabores</h3>
-                        <p id="selection-status" class="text-roger-green font-bold text-xs uppercase tracking-widest mt-2 flex items-center gap-2">
-                           <span class="relative flex h-2 w-2">
-                             <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-roger-green opacity-75"></span>
-                             <span class="relative inline-flex rounded-full h-2 w-2 bg-roger-green"></span>
-                           </span>
-                           Esperando selección...
-                        </p>
+                        <h3 class="text-4xl font-black text-zinc-900 tracking-tighter italic uppercase leading-none">Elige tus Sabores</h3>
+                        <p id="selection-status" class="text-roger-green font-bold text-xs uppercase tracking-[0.2em] mt-3">Configurando tu selección...</p>
                     </div>
                     
-                    <div class="flex items-center gap-4 bg-zinc-100/50 p-4 rounded-full border border-zinc-200/50">
-                        <div id="slot-1" class="w-16 h-16 rounded-full bg-white shadow-inner flex items-center justify-center text-2xl transition-all duration-500 border-2 border-transparent">🍕</div>
-                        <div class="text-zinc-300 font-light text-3xl">+</div>
-                        <div id="slot-2" class="w-16 h-16 rounded-full bg-white shadow-inner flex items-center justify-center text-2xl transition-all duration-500 border-2 border-transparent">🍕</div>
+                    <div class="flex items-center gap-6 bg-zinc-100/80 p-5 rounded-[2.5rem] border border-zinc-200/50 shadow-inner">
+                        <div id="slot-1" class="w-20 h-20 rounded-full bg-white flex items-center justify-center text-3xl transition-all duration-500 border-2 border-transparent shadow-sm">🍕</div>
+                        <div id="slot-plus" class="text-zinc-300 font-light text-4xl">+</div>
+                        <div id="slot-2" class="w-20 h-20 rounded-full bg-white flex items-center justify-center text-3xl transition-all duration-500 border-2 border-transparent shadow-sm">🍕</div>
                     </div>
                 </div>
 
-                <div class="flex flex-wrap justify-center gap-3 mb-10">
+                <div class="flex flex-wrap justify-center gap-3 mb-12">
                     {categorias.map(cat => (
-                        <button class="flavor-filter px-6 py-2.5 rounded-full text-[10px] font-bold uppercase tracking-widest border border-zinc-200 bg-white hover:bg-zinc-900 hover:text-white hover:border-zinc-900 transition-all active:scale-95 shadow-sm" data-filter={cat}>
+                        <button class="flavor-filter px-7 py-3 rounded-full text-[10px] font-black uppercase tracking-widest border border-zinc-100 bg-white hover:bg-zinc-900 hover:text-white transition-all shadow-sm active:scale-95" data-filter={cat}>
                           {cat}
                         </button>
                     ))}
                 </div>
 
-                <div id="flavors-grid" class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
-                    {menu.sabores.map(sabor => (
-                        <div class="flavor-card group cursor-pointer" 
-                             data-category={sabor.categoria} 
-                             data-name={sabor.nombre} 
-                             data-type={sabor.tipo}>
-                            <div class="relative h-44 bg-zinc-100 rounded-[2rem] mb-4 overflow-hidden shadow-sm group-hover:shadow-xl transition-all duration-500">
-                                 <img src="https://images.unsplash.com/photo-1513104890138-7c749659a591?q=80&w=300" 
-                                      class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-1000" 
-                                      alt={sabor.nombre}/>
-                                 <div class="absolute inset-0 bg-gradient-to-t from-zinc-900/60 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500 flex items-end p-6">
-                                     <span class="text-white text-[10px] font-bold uppercase tracking-widest">Añadir sabor</span>
-                                 </div>
-                            </div>
-                            <h4 class="text-sm font-black text-zinc-900 uppercase italic px-2 group-hover:text-roger-green transition-colors leading-tight">{sabor.nombre}</h4>
-                            <p class="text-[10px] text-zinc-400 font-medium uppercase tracking-tighter px-2 mt-1 line-clamp-2 leading-relaxed">
-                                {sabor.ingredientes}
-                            </p>
-                        </div>
-                    ))}
-                </div>
+                <div id="flavors-grid" class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-8">
+                    </div>
 
-                <div id="action-container" class="mt-16 flex flex-col items-center gap-6 border-t border-zinc-100 pt-12">
-                    <button id="add-combo-to-cart" class="hidden w-full max-w-lg bg-roger-green text-white font-black py-7 rounded-full shadow-[0_20px_50px_rgba(46,125,50,0.3)] hover:bg-zinc-900 hover:shadow-none transition-all duration-500 uppercase tracking-[0.2em] text-xs active:scale-95">
-                        Confirmar Orden Exclusiva
-                    </button>
-                    <button id="reset-builder-btn" class="flex items-center gap-2 text-[10px] font-bold text-zinc-400 hover:text-red-500 transition-colors uppercase tracking-widest group">
-                        <svg class="w-4 h-4 group-hover:rotate-180 transition-transform duration-700" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" /></svg>
-                        Empezar de nuevo
+                <div id="action-container" class="mt-20 flex flex-col items-center gap-6 border-t border-zinc-100 pt-16">
+                    <button id="add-combo-to-cart" class="hidden w-full max-w-lg bg-roger-green text-white font-black py-8 rounded-[2.5rem] shadow-[0_20px_60px_rgba(22,163,74,0.3)] hover:bg-zinc-900 transition-all duration-500 uppercase tracking-[0.3em] text-xs">
+                        Confirmar Selección
                     </button>
                 </div>
             </div>
@@ -121,6 +120,8 @@ const categorias = ["Todos", "Carnes", "Tropical", "Picositas", "Vegetales", "Cl
         </div>
       </div>
     </section>
+
+    <Especialidades />
     
     <FlavorGallery/>
   </main>
@@ -129,8 +130,7 @@ const categorias = ["Todos", "Carnes", "Tropical", "Picositas", "Vegetales", "Cl
 <script>
   import { menu } from '../data/menu.js';
 
-  // Interfaz de estado
-  let currentSelection: any = { size: '', p1: null, p2: null, price: 0 };
+  let currentSelection: any = { mode: 'promo', size: '', p1: null, p2: null, price: 0 };
 
   const step1 = document.getElementById('step-1');
   const step2 = document.getElementById('step-2');
@@ -138,116 +138,161 @@ const categorias = ["Todos", "Carnes", "Tropical", "Picositas", "Vegetales", "Cl
   const status = document.getElementById('selection-status');
   const slot1 = document.getElementById('slot-1');
   const slot2 = document.getElementById('slot-2');
+  const slotPlus = document.getElementById('slot-plus');
+  const slider = document.getElementById('mode-slider');
+  const btnPromo = document.getElementById('btn-promo');
+  const btnSingle = document.getElementById('btn-single');
+  const flavorsGrid = document.getElementById('flavors-grid');
 
-  // 1. TAMAÑO
+  // Renderizar sabores dinámicamente
+  if (flavorsGrid) {
+    flavorsGrid.innerHTML = menu.sabores.map(sabor => `
+      <div class="flavor-card group cursor-pointer" 
+           data-category="${sabor.category}" 
+           data-name="${sabor.nombre}" 
+           data-type="${sabor.tipo}">
+          <div class="relative h-48 bg-zinc-100 rounded-[3rem] mb-5 overflow-hidden shadow-sm group-hover:shadow-2xl transition-all duration-500">
+               <img src="https://images.unsplash.com/photo-1513104890138-7c749659a591?q=80&w=300" 
+                    class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-1000" 
+                    alt="${sabor.nombre}"/>
+          </div>
+          <h4 class="text-sm font-black text-zinc-900 uppercase italic px-2 group-hover:text-roger-green transition-colors">${sabor.nombre}</h4>
+          <p class="text-[9px] text-zinc-400 font-bold uppercase px-2 mt-1 line-clamp-2 leading-relaxed tracking-tighter">
+              ${sabor.ingredientes}
+          </p>
+      </div>
+    `).join('');
+
+    // Re-vincular eventos después de renderizar
+    document.querySelectorAll('.flavor-card').forEach(card => {
+      card.addEventListener('click', () => handleFlavorClick(card));
+    });
+  }
+
+  document.addEventListener('DOMContentLoaded', () => {
+    toggleMode('promo');
+  });
+
+  function toggleMode(mode: string) {
+    currentSelection.mode = mode;
+    if (mode === 'promo') {
+      if(slider) slider.style.left = '6px';
+      btnPromo?.classList.add('text-white');
+      btnPromo?.classList.remove('text-zinc-400');
+      btnSingle?.classList.add('text-zinc-400');
+      btnSingle?.classList.remove('text-white');
+    } else {
+      if(slider) slider.style.left = 'calc(50% + 0px)';
+      btnSingle?.classList.add('text-white');
+      btnSingle?.classList.remove('text-zinc-400');
+      btnPromo?.classList.add('text-zinc-400');
+      btnPromo?.classList.remove('text-white');
+    }
+
+    document.querySelectorAll('.size-select').forEach(card => {
+      const basePrice = parseInt((card as HTMLElement).dataset.basePrice || "0");
+      const display = card.querySelector('.price-display');
+      if(display) {
+        display.style.opacity = '0';
+        display.style.transform = 'scale(0.8)';
+        setTimeout(() => {
+          display.innerHTML = (mode === 'single') ? `$${Math.round(basePrice * 0.6)}` : `$${basePrice}`;
+          display.style.opacity = '1';
+          display.style.transform = 'scale(1)';
+        }, 300);
+      }
+    });
+
+    if(mode === 'single') {
+        slot2?.classList.add('hidden');
+        slotPlus?.classList.add('hidden');
+    } else {
+        slot2?.classList.remove('hidden');
+        slotPlus?.classList.remove('hidden');
+    }
+  }
+
+  btnPromo?.addEventListener('click', () => toggleMode('promo'));
+  btnSingle?.addEventListener('click', () => toggleMode('single'));
+
   document.querySelectorAll('.size-select').forEach(btn => {
     btn.addEventListener('click', () => {
       currentSelection.size = (btn as HTMLElement).dataset.size;
-      if (step1) {
-        (step1 as HTMLElement).style.opacity = '0';
-        (step1 as HTMLElement).style.transform = 'translateY(-20px)';
-      }
-      setTimeout(() => {
-        step1?.classList.add('hidden');
-        step2?.classList.remove('hidden');
-        if (status) status.innerHTML = `<span class="text-zinc-400">Tamaño: ${currentSelection.size}</span> — Elige la 1ra Pizza`;
-      }, 400);
+      step1?.classList.add('hidden');
+      step2?.classList.remove('hidden');
+      if (status) status.innerHTML = `Tamaño: <span class="text-zinc-900">${currentSelection.size}</span> — Elige tu Pizza`;
     });
   });
 
-  // 2. SABORES
-  document.querySelectorAll('.flavor-card').forEach(card => {
-    card.addEventListener('click', () => {
-      const name = (card as HTMLElement).dataset.name;
-      const type = (card as HTMLElement).dataset.type;
-
-      if (!currentSelection.p1) {
-        currentSelection.p1 = { name, type };
-        animateSlot(slot1, "✅");
-        if (status) status.innerHTML = `<span class="text-zinc-900">¡Excelente!</span> — Ahora elige tu pizza de regalo`;
-      } else if (!currentSelection.p2) {
-        currentSelection.p2 = { name, type };
-        animateSlot(slot2, "✅");
-        
-        const sizeKey = currentSelection.size.toLowerCase();
-        
-        // Uso de casting "as any" para evitar errores de TypeScript en VS Code
-        const p1Price = (menu.tarifas as any)[currentSelection.p1.type][sizeKey];
-        const p2Price = (menu.tarifas as any)[currentSelection.p2.type][sizeKey];
-        currentSelection.price = Math.max(p1Price, p2Price);
-
-        if (status) status.innerHTML = `<span class="text-roger-green italic">¡Combo Perfecto Creado!</span>`;
-        if (addComboBtn) {
-          addComboBtn.innerText = `Confirmar Combo 2x1 — $${currentSelection.price}.00`;
-          addComboBtn.classList.remove('hidden');
-          addComboBtn.classList.add('animate-slide-up');
-        }
-      }
-    });
-  });
-
-  // 3. ENVÍO AL CARRITO (RESTAURADO)
-  addComboBtn?.addEventListener('click', () => {
-    if (currentSelection.p1 && currentSelection.p2 && currentSelection.size) {
-      const comboName = `${currentSelection.p1.name} + ${currentSelection.p2.name}`;
-      
-      const globalWindow = (window as any);
-      if (!globalWindow.cart) globalWindow.cart = [];
-      
-      globalWindow.cart.push({
-          nombre: `Combo 2x1: ${comboName}`,
-          tam: currentSelection.size,
-          precio: currentSelection.price,
-          cantidad: 1
-      });
-
-      if (typeof globalWindow.updateCartUI === 'function') {
-        globalWindow.updateCartUI();
-      }
-
-      if (typeof globalWindow.showToast === 'function') {
-        globalWindow.showToast(comboName);
-      }
-
-      resetBuilder();
-    }
-  });
-
-  function animateSlot(slot: HTMLElement | null, newIcon: string) {
-    if (!slot) return;
-    slot.style.transform = 'scale(1.3) rotate(15deg)';
-    slot.style.backgroundColor = '#2e7d32'; 
-    slot.style.color = 'white';
-    slot.style.borderColor = '#2e7d32';
-    slot.innerHTML = newIcon;
-    setTimeout(() => {
-        slot.style.transform = 'scale(1) rotate(0deg)';
-    }, 300);
-  }
-
-  function resetBuilder() {
-    currentSelection = { size: '', p1: null, p2: null, price: 0 };
-    if (step1) {
-      step1.classList.remove('hidden');
-      (step1 as HTMLElement).style.opacity = '1';
-      (step1 as HTMLElement).style.transform = 'translateY(0)';
-    }
+  document.getElementById('back-to-step-1')?.addEventListener('click', () => {
     step2?.classList.add('hidden');
-    addComboBtn?.classList.add('hidden');
-    
-    [slot1, slot2].forEach(slot => {
-      if (slot) {
-        slot.innerHTML = '🍕';
-        (slot as HTMLElement).style.backgroundColor = 'white';
-        (slot as HTMLElement).style.color = 'inherit';
-        (slot as HTMLElement).style.borderColor = 'transparent';
+    step1?.classList.remove('hidden');
+    resetInternalState();
+  });
+
+  function handleFlavorClick(card: any) {
+    const name = card.dataset.name;
+    const type = card.dataset.type;
+    const sizeKey = currentSelection.size.toLowerCase();
+
+    if (!currentSelection.p1) {
+      currentSelection.p1 = { name, type };
+      applyActiveSlot(slot1);
+      if (currentSelection.mode === 'single') {
+        const precioBase = (menu.tarifas as any)[type!][sizeKey];
+        currentSelection.price = Math.round(precioBase * 0.6);
+        showFinishBtn(`Confirmar Pizza Individual - $${currentSelection.price}.00`);
+      } else {
+        if (status) status.innerHTML = `Excelente. Ahora elige tu pizza de regalo (2x1)`;
       }
-    });
+    } 
+    else if (!currentSelection.p2 && currentSelection.mode === 'promo') {
+      currentSelection.p2 = { name, type };
+      applyActiveSlot(slot2);
+      const p1Price = (menu.tarifas as any)[currentSelection.p1.type][sizeKey];
+      const p2Price = (menu.tarifas as any)[type!][sizeKey];
+      currentSelection.price = Math.max(p1Price, p2Price);
+      showFinishBtn(`Confirmar Combo 2x1 — $${currentSelection.price}.00`);
+    }
   }
 
-  document.getElementById('reset-builder-btn')?.addEventListener('click', resetBuilder);
+  function applyActiveSlot(slot: any) {
+    if(!slot) return;
+    slot.innerHTML = "✅";
+    slot.style.backgroundColor = '#16a34a';
+    slot.style.color = 'white';
+    slot.animate([{ transform: 'scale(1)' }, { transform: 'scale(1.2)' }, { transform: 'scale(1)' }], { duration: 300 });
+  }
 
-  // Filtros
+  function showFinishBtn(text: string) {
+    if (addComboBtn) {
+      addComboBtn.innerText = text;
+      addComboBtn.classList.remove('hidden');
+      addComboBtn.classList.add('animate-slide-up');
+    }
+  }
+
+  function resetInternalState() {
+    currentSelection.p1 = null;
+    currentSelection.p2 = null;
+    [slot1, slot2].forEach(s => { 
+        if(s) { s.innerHTML = '🍕'; s.style.backgroundColor = 'white'; s.style.color = 'inherit'; }
+    });
+    addComboBtn?.classList.add('hidden');
+  }
+
+  addComboBtn?.addEventListener('click', () => {
+    const isPromo = currentSelection.mode === 'promo';
+    const itemTitle = isPromo ? `Combo 2x1: ${currentSelection.p1.name} + ${currentSelection.p2.name}` : `Pizza Individual: ${currentSelection.p1.name}`;
+    if (!(window as any).cart) (window as any).cart = [];
+    (window as any).cart.push({ nombre: itemTitle, tam: currentSelection.size, precio: currentSelection.price, cantidad: 1 });
+    if (typeof (window as any).updateCartUI === 'function') (window as any).updateCartUI();
+    resetInternalState();
+    step2?.classList.add('hidden');
+    step1?.classList.remove('hidden');
+    if (typeof (window as any).showToast === 'function') { (window as any).showToast(isPromo ? "Combo 2x1" : currentSelection.p1.name); }
+  });
+
   document.querySelectorAll('.flavor-filter').forEach(btn => {
     btn.addEventListener('click', (e) => {
       const filter = (e.target as HTMLElement).dataset.filter;
@@ -264,12 +309,11 @@ const categorias = ["Todos", "Carnes", "Tropical", "Picositas", "Vegetales", "Cl
 </script>
 
 <style>
-  .animate-fade-in-up { animation: fadeInUp 0.8s cubic-bezier(0.2, 0.8, 0.2, 1) forwards; }
-  .animate-slide-up { animation: slideUp 0.6s cubic-bezier(0.2, 0.8, 0.2, 1) forwards; }
+  .animate-fade-in-up { animation: fadeInUp 0.8s ease-out forwards; }
+  .animate-slide-up { animation: slideUp 0.6s ease-out forwards; }
   .animate-fade-in { animation: fadeIn 0.5s ease-out forwards; }
   @keyframes fadeInUp { from { opacity: 0; transform: translateY(40px); } to { opacity: 1; transform: translateY(0); } }
   @keyframes slideUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
   @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
-  .flavor-card { transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1); }
-  .backdrop-blur-xl { backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px); }
+  .price-display { transition: all 0.3s ease-out; }
 </style>

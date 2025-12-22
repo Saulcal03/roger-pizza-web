@@ -1,0 +1,117 @@
+---
+// src/components/Especialidades.astro
+import { menu } from '../data/menu.js';
+---
+
+<section id="especiales" class="py-24 bg-zinc-900 relative overflow-hidden">
+  <div class="container mx-auto px-6 relative z-10 text-center">
+    <h3 class="text-white text-5xl md:text-7xl font-black uppercase italic tracking-tighter mb-16">Especialidades Roger</h3>
+    
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-6xl mx-auto">
+      {menu.promocionesEspeciales.map(promo => (
+        <div class="bg-zinc-800/40 border border-zinc-700/50 p-10 rounded-[4rem] group">
+          <h4 class="text-white text-2xl font-black uppercase italic mb-2">{promo.nombre}</h4>
+          <p class="text-roger-green font-black text-2xl mb-4">${promo.precio}</p>
+          <p class="text-zinc-400 text-[10px] uppercase font-bold mb-6">{promo.detalles}</p>
+          
+          <button 
+            class="open-stations-btn w-full bg-white text-zinc-900 py-4 rounded-2xl font-black uppercase text-[10px] hover:bg-roger-green hover:text-white transition-all"
+            data-nombre={promo.nombre}
+            data-precio={promo.precio}
+            data-estaciones={promo.nombre.includes('BARRA') ? 2 : 4}
+            data-regalo={promo.regalo}
+          >
+            Seleccionar Estaciones
+          </button>
+        </div>
+      ))}
+    </div>
+  </div>
+
+  <div id="stations-modal" class="fixed inset-0 z-[110] hidden flex items-center justify-center p-4 bg-black/80 backdrop-blur-md">
+    <div class="bg-white w-full max-w-md rounded-[3rem] p-8 shadow-2xl relative">
+      <h4 id="station-modal-title" class="text-2xl font-black uppercase italic text-zinc-900 mb-2"></h4>
+      <p id="station-instruction" class="text-[10px] font-bold text-zinc-400 uppercase tracking-widest mb-6"></p>
+
+      <div id="station-slots" class="flex justify-center gap-3 mb-8"></div>
+
+      <div class="max-h-60 overflow-y-auto grid grid-cols-2 gap-2 p-2 bg-zinc-50 rounded-2xl mb-6">
+        {menu.sabores.map(s => (
+          <button class="flavor-station-btn p-3 bg-white border border-zinc-100 rounded-xl text-[10px] font-black uppercase italic hover:border-roger-green transition-all" data-name={s.nombre}>
+            {s.nombre}
+          </button>
+        ))}
+      </div>
+
+      <div class="flex gap-3">
+        <button id="close-stations" class="flex-1 py-4 bg-zinc-100 text-zinc-400 rounded-2xl font-black uppercase text-[10px]">Cancelar</button>
+        <button id="confirm-special" class="flex-2 py-4 px-8 bg-roger-green text-white rounded-2xl font-black uppercase text-[10px] opacity-50 pointer-events-none transition-all">Confirmar</button>
+      </div>
+    </div>
+  </div>
+</section>
+
+<script is:inline>
+  let config = { nombre: '', precio: 0, max: 0, regalo: '', seleccionados: [] };
+
+  document.querySelectorAll('.open-stations-btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+      config = {
+        nombre: btn.dataset.nombre,
+        precio: parseFloat(btn.dataset.precio),
+        max: parseInt(btn.dataset.estaciones),
+        regalo: btn.dataset.regalo,
+        seleccionados: []
+      };
+      
+      document.getElementById('station-modal-title').innerText = config.nombre;
+      document.getElementById('station-instruction').innerText = `Elige ${config.max} estaciones de sabor`;
+      renderSlots();
+      document.getElementById('stations-modal').classList.remove('hidden');
+    });
+  });
+
+  function renderSlots() {
+    const container = document.getElementById('station-slots');
+    container.innerHTML = '';
+    for(let i=0; i < config.max; i++) {
+      const flavor = config.seleccionados[i] || '🍕';
+      container.innerHTML += `<div class="w-12 h-12 rounded-full border-2 border-dashed border-zinc-200 flex items-center justify-center text-[10px] font-black ${config.seleccionados[i] ? 'bg-roger-green text-white border-none' : 'text-zinc-300'}">${flavor === '🍕' ? '🍕' : '✅'}</div>`;
+    }
+    
+    const confirmBtn = document.getElementById('confirm-special');
+    if(config.seleccionados.length === config.max) {
+      confirmBtn.classList.remove('opacity-50', 'pointer-events-none');
+    } else {
+      confirmBtn.classList.add('opacity-50', 'pointer-events-none');
+    }
+  }
+
+  document.querySelectorAll('.flavor-station-btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+      if(config.seleccionados.length < config.max) {
+        config.seleccionados.push(btn.dataset.name);
+        renderSlots();
+      }
+    });
+  });
+
+  document.getElementById('confirm-special').addEventListener('click', () => {
+    const item = {
+      nombre: `${config.nombre} (${config.seleccionados.join(' + ')})`,
+      tam: "Especial",
+      precio: config.precio,
+      cantidad: 1,
+      regalo: config.regalo
+    };
+    
+    window.cart.push(item);
+    window.updateCartUI();
+    document.getElementById('stations-modal').classList.add('hidden');
+    if(window.showToast) window.showToast(config.nombre);
+  });
+
+  document.getElementById('close-stations').addEventListener('click', () => {
+    document.getElementById('stations-modal').classList.add('hidden');
+  });
+</script>
