@@ -4,10 +4,9 @@ import Navbar from '../components/Navbar.astro';
 import OrderModal from '../components/OrderModal.astro';
 import Toast from '../components/Toast.astro';
 import FlavorGallery from '../components/FlavorGallery.astro';
-
-// IMPORTAMOS EL NUEVO COMPONENTE
 import Especialidades from '../components/Especialidades.astro';
 
+// Precios BASE (Estándar) para visualización inicial
 const tamaños = [
   { nombre: "Chica", precio: 180, icon: "🍕" },
   { nombre: "Mediana", precio: 265, icon: "🍕" },
@@ -58,22 +57,27 @@ const categorias = ["Todos", "Carnes", "Tropical", "Picositas", "Vegetales", "Cl
         </div>
 
         <div class="max-w-5xl mx-auto">
+          
           <div id="step-1" class="animate-fade-in-up">
             <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-              {tamaños.map((tam, index) => (
-                <button 
-                  class="size-select group relative overflow-hidden bg-white p-8 rounded-[2.5rem] border border-zinc-200/60 shadow-sm hover:shadow-2xl hover:border-roger-green hover:-translate-y-2 transition-all duration-500"
-                  data-size={tam.nombre}
-                  data-base-price={tam.precio}
-                  style={`animation-delay: ${index * 100}ms`}
-                >
-                  <div class="absolute top-0 left-0 w-full h-1 bg-roger-green scale-x-0 group-hover:scale-x-100 transition-transform duration-500 origin-left"></div>
-                  <p class="text-[10px] font-bold text-zinc-400 uppercase tracking-[0.2em] mb-6 group-hover:text-roger-green transition-colors">{tam.nombre}</p>
-                  <div class="text-4xl mb-4 transform group-hover:scale-110 group-hover:rotate-12 transition-transform duration-500">🍕</div>
-                  <p class="price-display text-3xl font-black text-zinc-900 mb-1 transition-all duration-500">${tam.precio}</p>
-                  <p class="text-xs font-bold text-zinc-400 group-hover:text-zinc-900 transition-colors uppercase italic">Seleccionar</p>
-                </button>
-              ))}
+            {tamaños.map((tam) => (
+              <button 
+                class="size-select group relative overflow-hidden bg-white p-8 rounded-[2.5rem] border border-zinc-200/60 shadow-sm hover:shadow-2xl hover:border-roger-green hover:-translate-y-2 transition-all duration-500"
+                data-size={tam.nombre}
+                data-base-price={tam.precio}
+              >
+                <div class="absolute top-0 left-0 w-full h-1 bg-roger-green scale-x-0 group-hover:scale-x-100 transition-transform duration-500 origin-left"></div>
+                
+                <h3 class="text-xl font-black text-zinc-900 mb-2 uppercase italic tracking-tighter">{tam.nombre}</h3>
+                
+                <p class="text-[10px] font-bold text-zinc-400 uppercase tracking-[0.2em] mb-4 group-hover:text-roger-green transition-colors">Desde</p>
+                <div class="text-4xl mb-4 transform group-hover:scale-110 group-hover:rotate-12 transition-transform duration-500">🍕</div>
+                
+                <p class="price-display text-3xl font-black text-zinc-900 mb-1 transition-all duration-300 transform origin-left">${tam.precio}</p>
+                
+                <p class="text-xs font-bold text-zinc-400 group-hover:text-zinc-900 transition-colors uppercase italic">Seleccionar</p>
+              </button>
+            ))}
             </div>
           </div>
 
@@ -92,10 +96,10 @@ const categorias = ["Todos", "Carnes", "Tropical", "Picositas", "Vegetales", "Cl
                         <p id="selection-status" class="text-roger-green font-bold text-xs uppercase tracking-[0.2em] mt-3">Configurando tu selección...</p>
                     </div>
                     
-                    <div class="flex items-center gap-6 bg-zinc-100/80 p-5 rounded-[2.5rem] border border-zinc-200/50 shadow-inner">
-                        <div id="slot-1" class="w-20 h-20 rounded-full bg-white flex items-center justify-center text-3xl transition-all duration-500 border-2 border-transparent shadow-sm">🍕</div>
-                        <div id="slot-plus" class="text-zinc-300 font-light text-4xl">+</div>
-                        <div id="slot-2" class="w-20 h-20 rounded-full bg-white flex items-center justify-center text-3xl transition-all duration-500 border-2 border-transparent shadow-sm">🍕</div>
+                    <div class="flex items-center gap-6 bg-zinc-100/80 p-5 rounded-[2.5rem] border border-zinc-200/50 shadow-inner transition-all duration-500">
+                        <div id="slot-1" class="w-20 h-20 rounded-full bg-white flex items-center justify-center text-3xl transition-all duration-500 border-2 border-transparent shadow-sm hover:scale-105 cursor-pointer">🍕</div>
+                        <div id="slot-plus" class="text-zinc-300 font-light text-4xl transition-all duration-300">+</div>
+                        <div id="slot-2" class="w-20 h-20 rounded-full bg-white flex items-center justify-center text-3xl transition-all duration-500 border-2 border-transparent shadow-sm hover:scale-105 cursor-pointer">🍕</div>
                     </div>
                 </div>
 
@@ -107,8 +111,7 @@ const categorias = ["Todos", "Carnes", "Tropical", "Picositas", "Vegetales", "Cl
                     ))}
                 </div>
 
-                <div id="flavors-grid" class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-8">
-                    </div>
+                <div id="flavors-grid" class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-8"></div>
 
                 <div id="action-container" class="mt-20 flex flex-col items-center gap-6 border-t border-zinc-100 pt-16">
                     <button id="add-combo-to-cart" class="hidden w-full max-w-lg bg-roger-green text-white font-black py-8 rounded-[2.5rem] shadow-[0_20px_60px_rgba(22,163,74,0.3)] hover:bg-zinc-900 transition-all duration-500 uppercase tracking-[0.3em] text-xs">
@@ -122,16 +125,17 @@ const categorias = ["Todos", "Carnes", "Tropical", "Picositas", "Vegetales", "Cl
     </section>
 
     <Especialidades />
-    
     <FlavorGallery/>
   </main>
 </Layout>
 
 <script>
+  // Asegúrate de que la ruta sea correcta según tu proyecto
   import { menu } from '../data/menu.js';
 
   let currentSelection: any = { mode: 'promo', size: '', p1: null, p2: null, price: 0 };
 
+  // Elementos DOM
   const step1 = document.getElementById('step-1');
   const step2 = document.getElementById('step-2');
   const addComboBtn = document.getElementById('add-combo-to-cart');
@@ -144,116 +148,201 @@ const categorias = ["Todos", "Carnes", "Tropical", "Picositas", "Vegetales", "Cl
   const btnSingle = document.getElementById('btn-single');
   const flavorsGrid = document.getElementById('flavors-grid');
 
-  // Renderizar sabores dinámicamente
+  // --- 1. RENDERIZADO DE SABORES ---
   if (flavorsGrid) {
-    flavorsGrid.innerHTML = menu.sabores.map(sabor => `
-      <div class="flavor-card group cursor-pointer" 
-           data-category="${sabor.category}" 
-           data-name="${sabor.nombre}" 
-           data-type="${sabor.tipo}">
-          <div class="relative h-48 bg-zinc-100 rounded-[3rem] mb-5 overflow-hidden shadow-sm group-hover:shadow-2xl transition-all duration-500">
-               <img src="https://images.unsplash.com/photo-1513104890138-7c749659a591?q=80&w=300" 
-                    class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-1000" 
-                    alt="${sabor.nombre}"/>
-          </div>
-          <h4 class="text-sm font-black text-zinc-900 uppercase italic px-2 group-hover:text-roger-green transition-colors">${sabor.nombre}</h4>
-          <p class="text-[9px] text-zinc-400 font-bold uppercase px-2 mt-1 line-clamp-2 leading-relaxed tracking-tighter">
-              ${sabor.ingredientes}
-          </p>
-      </div>
-    `).join('');
+    flavorsGrid.innerHTML = menu.sabores.map(sabor => {
+      let badge = '';
+      if (sabor.tipo === 'marinera') {
+        badge = `<span class="absolute top-4 right-4 z-20 bg-orange-600 text-white text-[8px] font-black px-3 py-1 rounded-full uppercase tracking-widest shadow-lg">⭐ Premium</span>`;
+      } else if (sabor.tipo === 'tropical') {
+        badge = `<span class="absolute top-4 right-4 z-20 bg-roger-green text-white text-[8px] font-black px-3 py-1 rounded-full uppercase tracking-widest shadow-lg">✨ Especial</span>`;
+      }
 
-    // Re-vincular eventos después de renderizar
+      return `
+        <div class="flavor-card group cursor-pointer relative" 
+             data-category="${sabor.categoria}" 
+             data-name="${sabor.nombre}" 
+             data-type="${sabor.tipo}">
+            ${badge}
+            <div class="relative h-48 bg-zinc-100 rounded-[3rem] mb-5 overflow-hidden shadow-sm group-hover:shadow-2xl transition-all duration-500">
+                <img src="https://images.unsplash.com/photo-1513104890138-7c749659a591?q=80&w=300" 
+                     class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-1000" 
+                     alt="${sabor.nombre}"/>
+                <div class="absolute inset-0 bg-black/0 group-hover:bg-black/20 transition-colors duration-500"></div>
+            </div>
+            <h4 class="text-sm font-black text-zinc-900 uppercase italic px-2 group-hover:text-roger-green transition-colors">${sabor.nombre}</h4>
+            <p class="text-[9px] text-zinc-400 font-bold uppercase px-2 mt-1 line-clamp-2 leading-relaxed tracking-tighter">
+                ${sabor.ingredientes}
+            </p>
+        </div>
+      `;
+    }).join('');
+
     document.querySelectorAll('.flavor-card').forEach(card => {
       card.addEventListener('click', () => handleFlavorClick(card));
     });
   }
 
-  document.addEventListener('DOMContentLoaded', () => {
-    toggleMode('promo');
+  // --- 2. FILTROS ---
+  const filterButtons = document.querySelectorAll('.flavor-filter');
+  filterButtons.forEach(btn => {
+    btn.addEventListener('click', (e) => {
+      filterButtons.forEach(b => {
+        b.classList.remove('bg-zinc-900', 'text-white');
+        b.classList.add('bg-white', 'text-zinc-800');
+      });
+      const target = e.currentTarget as HTMLElement;
+      target.classList.remove('bg-white', 'text-zinc-800');
+      target.classList.add('bg-zinc-900', 'text-white');
+
+      const category = target.dataset.filter;
+      const cards = document.querySelectorAll('.flavor-card');
+
+      cards.forEach((card: any) => {
+        if (category === 'Todos' || card.dataset.category === category) {
+          card.classList.remove('hidden');
+          card.classList.add('block', 'animate-fade-in');
+        } else {
+          card.classList.add('hidden');
+          card.classList.remove('block', 'animate-fade-in');
+        }
+      });
+    });
   });
 
+  // --- 3. GESTIÓN DE SLOTS ---
+  [slot1, slot2].forEach((slot, index) => {
+    slot?.addEventListener('click', () => {
+      if (index === 0 && currentSelection.p1) {
+        currentSelection.p1 = null;
+        resetSlotUI(slot1);
+      } else if (index === 1 && currentSelection.p2) {
+        currentSelection.p2 = null;
+        resetSlotUI(slot2);
+      }
+      updatePriceAndUI();
+    });
+  });
+
+  function resetSlotUI(slot: any) {
+    if(!slot) return;
+    slot.innerHTML = '🍕';
+    slot.style.backgroundColor = 'white';
+    slot.style.color = 'inherit';
+    addComboBtn?.classList.add('hidden');
+  }
+
+  function handleFlavorClick(card: any) {
+    const name = card.dataset.name;
+    const type = card.dataset.type; 
+
+    if (currentSelection.mode === 'single') {
+        currentSelection.p1 = { name, type };
+        applyActiveSlot(slot1);
+    } else {
+        if (currentSelection.p1 && currentSelection.p2) return;
+        
+        if (!currentSelection.p1) {
+            currentSelection.p1 = { name, type };
+            applyActiveSlot(slot1);
+        } else if (!currentSelection.p2) {
+            currentSelection.p2 = { name, type };
+            applyActiveSlot(slot2);
+        }
+    }
+
+    if ((type === 'marinera' || type === 'tropical') && typeof (window as any).showToast === 'function') {
+        const msg = type === 'marinera' ? "Especialidad Marinera seleccionada" : "Especialidad Tropical seleccionada";
+        (window as any).showToast(msg, "info");
+    }
+
+    updatePriceAndUI();
+  }
+
+  // --- 4. CÁLCULO DE PRECIO ---
+  function updatePriceAndUI() {
+    const sizeName = currentSelection.size || '';
+    const sizeKey = sizeName.toLowerCase(); 
+    
+    if (!currentSelection.p1) {
+      if (status) status.innerHTML = `Tamaño: <span class="text-roger-green text-lg font-black">${sizeName}</span> — Elige tu pizza`;
+      return;
+    }
+
+    const p1Price = menu.tarifas[currentSelection.p1.type][sizeKey];
+
+    if (currentSelection.mode === 'single') {
+      const factor = 1 - menu.descuentoIndividual; 
+      currentSelection.price = Math.ceil(p1Price * factor);
+      
+      showFinishBtn(`Confirmar ${sizeName} Individual - $${currentSelection.price}`);
+      if (status) status.innerHTML = `Llevas una <span class="font-bold">${sizeName}</span> de ${currentSelection.p1.name}`;
+    
+    } else if (currentSelection.p1 && currentSelection.p2) {
+      const p2Price = menu.tarifas[currentSelection.p2.type][sizeKey];
+      const finalPrice = Math.max(p1Price, p2Price);
+      currentSelection.price = finalPrice;
+
+      showFinishBtn(`Confirmar 2x1 ${sizeName} - $${currentSelection.price}`);
+      if (status) status.innerHTML = `Combo 2x1 <span class="font-bold">${sizeName}</span> listo`;
+    
+    } else {
+      currentSelection.price = p1Price; 
+      if (status) status.innerHTML = `Tienes una ${currentSelection.p1.name} (${sizeName}). Faltan 1...`;
+    }
+  }
+
+  // --- 5. CAMBIO DE MODO ---
   function toggleMode(mode: string) {
     currentSelection.mode = mode;
+    
     if (mode === 'promo') {
       if(slider) slider.style.left = '6px';
       btnPromo?.classList.add('text-white');
       btnPromo?.classList.remove('text-zinc-400');
       btnSingle?.classList.add('text-zinc-400');
       btnSingle?.classList.remove('text-white');
+      
+      slotPlus?.classList.remove('hidden', 'opacity-0');
+      slot2?.classList.remove('hidden', 'opacity-0');
     } else {
       if(slider) slider.style.left = 'calc(50% + 0px)';
       btnSingle?.classList.add('text-white');
       btnSingle?.classList.remove('text-zinc-400');
       btnPromo?.classList.add('text-zinc-400');
       btnPromo?.classList.remove('text-white');
-    }
 
-    document.querySelectorAll('.size-select').forEach(card => {
-      const basePrice = parseInt((card as HTMLElement).dataset.basePrice || "0");
-      const display = card.querySelector('.price-display');
-      if(display) {
-        display.style.opacity = '0';
-        display.style.transform = 'scale(0.8)';
-        setTimeout(() => {
-          display.innerHTML = (mode === 'single') ? `$${Math.round(basePrice * 0.6)}` : `$${basePrice}`;
-          display.style.opacity = '1';
-          display.style.transform = 'scale(1)';
-        }, 300);
-      }
-    });
-
-    if(mode === 'single') {
-        slot2?.classList.add('hidden');
-        slotPlus?.classList.add('hidden');
-    } else {
-        slot2?.classList.remove('hidden');
-        slotPlus?.classList.remove('hidden');
+      slotPlus?.classList.add('hidden', 'opacity-0');
+      slot2?.classList.add('hidden', 'opacity-0');
     }
+    
+    updateCardPricesWithAnimation(mode);
+    resetInternalState();
   }
 
-  btnPromo?.addEventListener('click', () => toggleMode('promo'));
-  btnSingle?.addEventListener('click', () => toggleMode('single'));
-
-  document.querySelectorAll('.size-select').forEach(btn => {
-    btn.addEventListener('click', () => {
-      currentSelection.size = (btn as HTMLElement).dataset.size;
-      step1?.classList.add('hidden');
-      step2?.classList.remove('hidden');
-      if (status) status.innerHTML = `Tamaño: <span class="text-zinc-900">${currentSelection.size}</span> — Elige tu Pizza`;
-    });
-  });
-
-  document.getElementById('back-to-step-1')?.addEventListener('click', () => {
-    step2?.classList.add('hidden');
-    step1?.classList.remove('hidden');
-    resetInternalState();
-  });
-
-  function handleFlavorClick(card: any) {
-    const name = card.dataset.name;
-    const type = card.dataset.type;
-    const sizeKey = currentSelection.size.toLowerCase();
-
-    if (!currentSelection.p1) {
-      currentSelection.p1 = { name, type };
-      applyActiveSlot(slot1);
-      if (currentSelection.mode === 'single') {
-        const precioBase = (menu.tarifas as any)[type!][sizeKey];
-        currentSelection.price = Math.round(precioBase * 0.6);
-        showFinishBtn(`Confirmar Pizza Individual - $${currentSelection.price}.00`);
+  function updateCardPricesWithAnimation(mode: string) {
+    const sizeButtons = document.querySelectorAll('.size-select');
+    
+    sizeButtons.forEach((btn: any) => {
+      const basePrice = parseInt(btn.dataset.basePrice);
+      const priceDisplay = btn.querySelector('.price-display');
+      
+      let newPriceText = '';
+      if (mode === 'single') {
+        const factor = 1 - menu.descuentoIndividual; 
+        newPriceText = `$${Math.ceil(basePrice * factor)}`;
       } else {
-        if (status) status.innerHTML = `Excelente. Ahora elige tu pizza de regalo (2x1)`;
+        newPriceText = `$${basePrice}`;
       }
-    } 
-    else if (!currentSelection.p2 && currentSelection.mode === 'promo') {
-      currentSelection.p2 = { name, type };
-      applyActiveSlot(slot2);
-      const p1Price = (menu.tarifas as any)[currentSelection.p1.type][sizeKey];
-      const p2Price = (menu.tarifas as any)[type!][sizeKey];
-      currentSelection.price = Math.max(p1Price, p2Price);
-      showFinishBtn(`Confirmar Combo 2x1 — $${currentSelection.price}.00`);
-    }
+
+      priceDisplay.classList.add('scale-125', 'text-roger-green');
+      setTimeout(() => {
+        priceDisplay.innerText = newPriceText;
+        setTimeout(() => {
+           priceDisplay.classList.remove('scale-125', 'text-roger-green');
+        }, 150);
+      }, 150);
+    });
   }
 
   function applyActiveSlot(slot: any) {
@@ -268,52 +357,163 @@ const categorias = ["Todos", "Carnes", "Tropical", "Picositas", "Vegetales", "Cl
     if (addComboBtn) {
       addComboBtn.innerText = text;
       addComboBtn.classList.remove('hidden');
-      addComboBtn.classList.add('animate-slide-up');
     }
   }
 
   function resetInternalState() {
     currentSelection.p1 = null;
     currentSelection.p2 = null;
-    [slot1, slot2].forEach(s => { 
-        if(s) { s.innerHTML = '🍕'; s.style.backgroundColor = 'white'; s.style.color = 'inherit'; }
-    });
+    [slot1, slot2].forEach(s => resetSlotUI(s));
     addComboBtn?.classList.add('hidden');
+    if(status) status.innerHTML = "Selecciona el tamaño...";
   }
 
+  // --- 6. EVENTOS Y LÓGICA DE FUSIÓN (AUTO-COMBO) ---
   addComboBtn?.addEventListener('click', () => {
-    const isPromo = currentSelection.mode === 'promo';
-    const itemTitle = isPromo ? `Combo 2x1: ${currentSelection.p1.name} + ${currentSelection.p2.name}` : `Pizza Individual: ${currentSelection.p1.name}`;
     if (!(window as any).cart) (window as any).cart = [];
-    (window as any).cart.push({ nombre: itemTitle, tam: currentSelection.size, precio: currentSelection.price, cantidad: 1 });
+
+    // LÓGICA DE FUSIÓN INTELIGENTE (USANDO METADATOS)
+    if (currentSelection.mode === 'single') {
+        // 1. Buscamos si hay una pizza "huérfana" (individual) del mismo tamaño en el carrito
+        // Usamos la propiedad 'meta_mode' para saberlo con seguridad
+        const orphanIndex = (window as any).cart.findIndex((item: any) => 
+            item.meta_mode === 'single' && 
+            item.tam === currentSelection.size
+        );
+
+        if (orphanIndex !== -1) {
+            // ¡ENCONTRAMOS PAREJA! Convertimos a Combo 2x1
+            const orphanItem = (window as any).cart[orphanIndex];
+            
+            // Recalculamos el precio (la más cara de las dos)
+            const sizeKey = currentSelection.size.toLowerCase();
+            const price1 = menu.tarifas[orphanItem.meta_type][sizeKey]; // Precio de la que ya estaba
+            const price2 = menu.tarifas[currentSelection.p1.type][sizeKey]; // Precio de la nueva
+            const comboPrice = Math.max(price1, price2);
+
+            // Actualizamos el item existente para que sea un Combo
+            orphanItem.nombre = `Combo 2x1 (${currentSelection.size}): ${orphanItem.meta_flavor} + ${currentSelection.p1.name}`;
+            orphanItem.precio = comboPrice;
+            orphanItem.meta_mode = 'combo'; // Ya no es single, ya está casada
+            
+            // Notificamos
+            if (typeof (window as any).showToast === 'function') {
+                (window as any).showToast(`¡Auto-Combo 2x1 creado! Ahorraste dinero.`, "success");
+            }
+            if (typeof (window as any).updateCartUI === 'function') (window as any).updateCartUI();
+            
+            resetInternalState();
+            step2?.classList.add('hidden');
+            step1?.classList.remove('hidden');
+            return; // Terminamos aquí, no agregamos fila nueva
+        }
+    }
+
+    // SI NO SE FUSIONÓ, AGREGAMOS NUEVO ITEM
+    const isPromo = currentSelection.mode === 'promo';
+    const itemTitle = isPromo 
+      ? `Combo 2x1 (${currentSelection.size}): ${currentSelection.p1.name} + ${currentSelection.p2.name}` 
+      : `Pizza Individual (${currentSelection.size}): ${currentSelection.p1.name}`;
+
+    // Datos extra para futuras fusiones
+    const metaData = {
+        mode: isPromo ? 'combo' : 'single',
+        flavor: currentSelection.p1.name, // Guardamos el nombre limpio
+        type: currentSelection.p1.type      // Guardamos el tipo (estandar, tropical, etc)
+    };
+
+    // Buscamos duplicados exactos para agrupar cantidad
+    const existingItem = (window as any).cart.find((item: any) => 
+      item.nombre === itemTitle && item.tam === currentSelection.size
+    );
+
+    if (existingItem) {
+      existingItem.cantidad += 1;
+    } else {
+      (window as any).cart.push({ 
+        nombre: itemTitle, 
+        tam: currentSelection.size, 
+        precio: currentSelection.price, 
+        cantidad: 1,
+        // Guardamos metadatos para la lógica de fusión
+        meta_mode: metaData.mode,
+        meta_flavor: metaData.flavor,
+        meta_type: metaData.type
+      });
+    }
+
     if (typeof (window as any).updateCartUI === 'function') (window as any).updateCartUI();
+    if (typeof (window as any).showToast === 'function') { 
+       (window as any).showToast(isPromo ? "¡Combo agregado!" : "Pizza agregada", "success"); 
+    }
+
     resetInternalState();
     step2?.classList.add('hidden');
     step1?.classList.remove('hidden');
-    if (typeof (window as any).showToast === 'function') { (window as any).showToast(isPromo ? "Combo 2x1" : currentSelection.p1.name); }
   });
 
-  document.querySelectorAll('.flavor-filter').forEach(btn => {
-    btn.addEventListener('click', (e) => {
-      const filter = (e.target as HTMLElement).dataset.filter;
-      document.querySelectorAll('.flavor-card').forEach(card => {
-        const c = card as HTMLElement;
-        if (filter === "Todos" || c.dataset.category === filter) {
-          c.style.display = 'block';
-        } else {
-          c.style.display = 'none';
-        }
-      });
+  btnPromo?.addEventListener('click', () => toggleMode('promo'));
+  btnSingle?.addEventListener('click', () => toggleMode('single'));
+
+  document.querySelectorAll('.size-select').forEach(btn => {
+    btn.addEventListener('click', () => {
+      currentSelection.size = (btn as HTMLElement).dataset.size;
+      step1?.classList.add('hidden');
+      step2?.classList.remove('hidden');
+      updatePriceAndUI();
     });
+  });
+
+  document.getElementById('back-to-step-1')?.addEventListener('click', () => {
+    step2?.classList.add('hidden');
+    step1?.classList.remove('hidden');
+    resetInternalState();
   });
 </script>
 
 <style>
+  /* Animaciones */
+  #slot-1, #slot-2 {
+    cursor: pointer;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+
+  #slot-1:hover, #slot-2:hover {
+    transform: scale(1.1) rotate(-5deg);
+    background-color: #fee2e2 !important;
+    border-color: #ef4444 !important;
+  }
+
+  #slot-1:hover::after, #slot-2:hover::after {
+    content: '✖';
+    position: absolute;
+    font-size: 1rem;
+    color: #ef4444;
+    font-weight: 900;
+  }
+
+  #add-combo-to-cart {
+    background-color: #f59e0b;
+    color: white;
+    font-weight: 800;
+    padding: 1rem;
+    border-radius: 9999px;
+    transition: all 0.3s ease;
+    border: none;
+    cursor: pointer;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+  }
+
+  #add-combo-to-cart:hover {
+    background-color: #000000;
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(0,0,0,0.2);
+  }
+
   .animate-fade-in-up { animation: fadeInUp 0.8s ease-out forwards; }
   .animate-slide-up { animation: slideUp 0.6s ease-out forwards; }
   .animate-fade-in { animation: fadeIn 0.5s ease-out forwards; }
   @keyframes fadeInUp { from { opacity: 0; transform: translateY(40px); } to { opacity: 1; transform: translateY(0); } }
   @keyframes slideUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
   @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
-  .price-display { transition: all 0.3s ease-out; }
 </style>

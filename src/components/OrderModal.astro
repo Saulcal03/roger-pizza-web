@@ -66,10 +66,10 @@
   document.getElementById('close-modal')?.addEventListener('click', closeModal);
 
   document.getElementById('clear-cart-btn')?.addEventListener('click', () => {
-    if (confirm("¿Vaciar carrito?")) {
+    if (confirm("¿Deseas vaciar todo tu carrito?")) {
       window.cart = [];
       closeModal();
-      window.updateCartUI();
+      if (typeof window.updateCartUI === 'function') window.updateCartUI();
     }
   });
 
@@ -78,124 +78,97 @@
       window.cart.splice(index, 1);
     }
     if (window.cart.length === 0) closeModal();
-    window.updateCartUI();
+    if (typeof window.updateCartUI === 'function') window.updateCartUI();
   };
 
   window.updateCartUI = function() {
     const list = document.getElementById('cart-items-list');
     const priceDisplay = document.getElementById('pizza-price');
     const counter = document.getElementById('cart-counter');
+    const navTotal = document.getElementById('cart-total-navbar');
 
     if (!list) return;
+
     if (window.cart.length === 0) {
       list.innerHTML = `<p class="text-center text-zinc-400 py-12 font-bold uppercase text-[10px]">Carrito Vacío</p>`;
       if (priceDisplay) priceDisplay.innerText = "$0.00";
       if (counter) counter.innerText = "0";
+      if (navTotal) navTotal.innerText = "$0.00";
       return;
     }
-
-    const groups = {};
-    const specials = [];
-
-    // Separar por tipo de producto
-    window.cart.forEach((item, index) => {
-      if (item.tam === "Especial") {
-        specials.push({ ...item, originalIndex: index });
-      } else {
-        if (!groups[item.tam]) groups[item.tam] = [];
-        const cleanName = item.nombre.replace('Pizza Individual: ', '').replace('Combo 2x1: ', '');
-        const base = item.nombre.includes('Individual') ? item.precio / 0.6 : item.precio;
-        groups[item.tam].push({ nombre: cleanName, precioBase: base, originalIndex: index });
-      }
-    });
 
     let html = "";
     let total = 0;
 
-    // Renderizar Combos e Individuales normales
-    for (const tam in groups) {
-      const pizzas = groups[tam];
-      pizzas.sort((a, b) => b.precioBase - a.precioBase);
+    window.cart.forEach((item, index) => {
+      total += (item.precio * item.cantidad);
+      const isEspecial = item.tam === "Especial";
 
-      while (pizzas.length >= 2) {
-        const p1 = pizzas.shift();
-        const p2 = pizzas.shift();
-        const precioCombo = Math.max(p1.precioBase, p2.precioBase);
-        total += precioCombo;
+      if (isEspecial) {
         html += `
-          <div class="flex flex-col bg-zinc-50 p-5 rounded-[2rem] border-2 border-roger-green/20 mb-3 relative">
-            <div class="flex justify-between items-start">
+          <div class="flex flex-col bg-zinc-900 text-white p-6 rounded-[2.5rem] mb-3 shadow-xl relative overflow-hidden">
+            <div class="flex justify-between items-start mb-3">
               <div class="flex-1">
-                <p class="font-black text-zinc-900 text-[11px] uppercase italic">Combo 2x1: ${tam}</p>
-                <p class="text-[9px] text-zinc-500 font-bold mt-1 uppercase">${p1.nombre} + ${p2.nombre}</p>
+                <p class="font-black text-[12px] uppercase italic leading-tight">${item.nombre}</p>
+                <div class="flex items-center gap-2 mt-2">
+                  <span class="text-[14px]">🎁</span>
+                  <p class="text-[9px] text-roger-green font-black uppercase tracking-widest italic">${item.regalo || 'Refresco Gratis'}</p>
+                </div>
               </div>
               <div class="flex flex-col items-end gap-2">
-                <p class="font-black text-zinc-900 italic text-sm">$${precioCombo.toFixed(2)}</p>
-                <button onclick="updateQty(${p1.originalIndex}, -1)" class="text-zinc-300 hover:text-red-500 transition-colors">🗑️</button>
+                 <p class="font-black italic text-sm">$${item.precio.toFixed(2)}</p>
+                 <button onclick="updateQty(${index}, -1)" class="w-8 h-8 flex items-center justify-center bg-zinc-800 rounded-full text-zinc-500 hover:text-red-400 transition-colors">🗑️</button>
               </div>
             </div>
           </div>`;
-      }
-
-      if (pizzas.length === 1) {
-        const p = pizzas.shift();
-        const precioInd = Math.round(p.precioBase * 0.6);
-        total += precioInd;
+      } else {
         html += `
           <div class="flex justify-between items-center bg-zinc-50 p-5 rounded-[2rem] border border-zinc-100 mb-3">
             <div class="flex-1">
-              <p class="font-black text-zinc-900 text-[11px] uppercase italic">Pizza Individual: ${p.nombre}</p>
-              <p class="text-[9px] text-zinc-400 font-bold uppercase">${tam}</p>
+              <p class="font-black text-zinc-900 text-[11px] uppercase italic">${item.nombre}</p>
+              <p class="text-[9px] text-zinc-400 font-bold uppercase">${item.tam}</p>
             </div>
             <div class="flex items-center gap-4">
-              <p class="font-black text-zinc-900 italic text-sm">$${precioInd.toFixed(2)}</p>
-              <button onclick="updateQty(${p.originalIndex}, -1)" class="text-zinc-300 hover:text-red-500 transition-colors">🗑️</button>
+              <p class="font-black text-zinc-900 italic text-sm">$${item.precio.toFixed(2)}</p>
+              <button onclick="updateQty(${index}, -1)" class="text-zinc-300 hover:text-red-500 transition-colors">🗑️</button>
             </div>
           </div>`;
       }
-    }
-
-    // --- RENDERIZADO DE ESPECIALIDADES ---
-    specials.forEach((item) => {
-      const sub = item.precio * item.cantidad;
-      total += sub;
-      html += `
-        <div class="flex flex-col bg-zinc-900 text-white p-6 rounded-[2.5rem] mb-3 shadow-xl relative overflow-hidden">
-          <div class="flex justify-between items-start mb-3">
-            <div class="flex-1">
-              <p class="font-black text-[12px] uppercase italic leading-tight">${item.nombre}</p>
-              <div class="flex items-center gap-2 mt-2">
-                <span class="text-[14px]">🎁</span>
-                <p class="text-[9px] text-roger-green font-black uppercase tracking-widest italic">${item.regalo || 'Refresco Gratis'}</p>
-              </div>
-            </div>
-            <div class="flex flex-col items-end gap-2">
-               <p class="font-black italic text-sm">$${sub.toFixed(2)}</p>
-               <button onclick="updateQty(${item.originalIndex}, -1)" class="w-8 h-8 flex items-center justify-center bg-zinc-800 rounded-full text-zinc-500 hover:text-red-400 transition-colors">🗑️</button>
-            </div>
-          </div>
-        </div>`;
     });
 
     list.innerHTML = html;
-    if (priceDisplay) priceDisplay.innerText = `$${total.toFixed(2)}`;
-    if (counter) counter.innerText = window.cart.length;
+    const formattedTotal = `$${total.toFixed(2)}`;
+    if (priceDisplay) priceDisplay.innerText = formattedTotal;
+    if (navTotal) navTotal.innerText = formattedTotal;
+    if (counter) counter.innerText = window.cart.length.toString();
   };
 
+  // --- LÓGICA DE MENSAJE DE WHATSAPP MEJORADA ---
   document.getElementById('order-form')?.addEventListener('submit', (e) => {
     e.preventDefault();
     const formData = new FormData(e.target);
     const total = document.getElementById('pizza-price').innerText;
-    let detalle = "";
     
-    document.querySelectorAll('#cart-items-list > div').forEach(div => {
-      const titulo = div.querySelector('p')?.innerText;
-      const subInfo = div.querySelector('p:nth-child(2)')?.innerText || "";
-      const precio = div.querySelector('p.italic')?.innerText || "";
-      detalle += `• *${titulo}*%0A  _${subInfo}_  -> ${precio}%0A%0A`;
+    let detallePedido = "";
+    window.cart.forEach((item, index) => {
+        detallePedido += `*${index + 1}. ${item.nombre}*\n`;
+        detallePedido += `   - Tamaño: ${item.tam}\n`;
+        detallePedido += `   - Precio: $${item.precio.toFixed(2)}\n\n`;
     });
 
-    const mensaje = `*NUEVO PEDIDO - ROGER PIZZAS*%0A👤 *Cliente:* ${formData.get('nombre')}%0A📍 *Dir:* ${formData.get('direccion')}%0A🍕 *DETALLE:*%0A${detalle}💰 *TOTAL: ${total}*`;
-    window.open(`https://wa.me/2721318273?text=${mensaje}`, '_blank');
+    const nombre = formData.get('nombre');
+    const direccion = formData.get('direccion');
+    const notas = formData.get('notas') || "Sin notas adicionales";
+
+    const mensaje = `*🍕 NUEVO PEDIDO - ROGER PIZZAS*\n\n` +
+                    `👤 *Cliente:* ${nombre}\n` +
+                    `📍 *Dirección:* ${direccion}\n\n` +
+                    `📝 *DETALLE DEL PEDIDO:*\n${detallePedido}` +
+                    `🗒️ *NOTAS:* _${notas}_\n\n` +
+                    `💰 *TOTAL A PAGAR: ${total}*`;
+
+    const encodedMessage = encodeURIComponent(mensaje);
+    // Cambia el número por el tuyo
+    window.open(`https://wa.me/2721318273?text=${encodedMessage}`, '_blank');
   });
 </script>

@@ -27,20 +27,22 @@
 
       <button 
         id="open-cart" 
-        class="group relative bg-zinc-900 text-white px-7 py-3 rounded-2xl font-bold text-[11px] uppercase tracking-widest hover:bg-roger-green transition-all duration-300 flex items-center gap-3 shadow-lg shadow-zinc-900/10 active:scale-95"
+        class="group relative bg-zinc-900 text-white pl-7 pr-3 py-2 rounded-2xl font-bold text-[11px] uppercase tracking-widest hover:bg-roger-green transition-all duration-500 flex items-center gap-4 shadow-lg shadow-zinc-900/10 active:scale-95 overflow-hidden"
       >
-        <span class="relative">
-          Ver Pedido
-          <span class="absolute -bottom-1 left-0 w-0 h-[1px] bg-white transition-all group-hover:w-full"></span>
-        </span>
+        <div id="cart-shimmer" class="absolute inset-0 bg-gradient-to-r from-transparent via-white/10 to-transparent -translate-x-full group-hover:animate-shimmer hidden"></div>
         
-        <div id="cart-counter-container" class="hidden">
-            <span id="cart-counter" class="bg-roger-green text-white w-6 h-6 rounded-lg flex items-center justify-center text-[10px] font-black border border-white/20 shadow-sm">
+        <div class="flex flex-col items-start relative z-10">
+          <span class="text-[10px]">Ver Pedido</span>
+          <span id="cart-total-navbar" class="text-[9px] text-zinc-400 group-hover:text-white/90 transition-colors">$0.00</span>
+        </div>
+        
+        <div id="cart-counter-container" class="hidden relative z-10">
+            <span id="cart-counter" class="bg-roger-green text-white w-7 h-7 rounded-xl flex items-center justify-center text-[10px] font-black border border-white/20 shadow-sm transition-all duration-300">
                 0
             </span>
         </div>
 
-        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" class="opacity-70 group-hover:rotate-12 transition-transform">
+        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" class="opacity-70 group-hover:rotate-12 transition-transform relative z-10">
             <circle cx="9" cy="21" r="1"></circle><circle cx="20" cy="21" r="1"></circle>
             <path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"></path>
         </svg>
@@ -51,70 +53,133 @@
 </nav>
 
 <script is:inline>
-    // Aseguramos el comportamiento de scroll suave para los enlaces del navbar
+    // Scroll suave
     document.querySelectorAll('a[href^="#"]').forEach(anchor => {
         anchor.addEventListener('click', function (e) {
             e.preventDefault();
             const target = document.querySelector(this.getAttribute('href'));
             if (target) {
-                target.scrollIntoView({
-                    behavior: 'smooth'
-                });
+                target.scrollIntoView({ behavior: 'smooth' });
             }
         });
     });
 
     window.cart = window.cart || [];
 
+    // --- NUEVO: Función para dibujar los items dentro del carrito ---
+    window.renderCartItems = function() {
+        const container = document.getElementById('cart-items-container'); // Asegúrate que tu modal tenga este ID dentro
+        const emptyMsg = document.getElementById('cart-empty-message');
+        
+        if (!container) return; // Si no hay modal cargado aún, salimos
+
+        container.innerHTML = ''; // Limpiar lista anterior
+
+        if (window.cart.length === 0) {
+            if(emptyMsg) emptyMsg.classList.remove('hidden');
+            return;
+        } 
+        
+        if(emptyMsg) emptyMsg.classList.add('hidden');
+
+        window.cart.forEach((item, index) => {
+            // Creamos el HTML para cada pizza
+            const itemHTML = `
+                <div class="flex gap-4 mb-4 pb-4 border-b border-zinc-100 last:border-0 animate-pop-in">
+                    <div class="w-16 h-16 bg-zinc-50 rounded-xl flex items-center justify-center text-2xl shrink-0">
+                        🍕
+                    </div>
+
+                    <div class="flex-1">
+                        <div class="flex justify-between items-start">
+                            <h4 class="text-zinc-900 font-black uppercase italic text-sm leading-none">${item.nombre}</h4>
+                            <button onclick="window.removeItem(${index})" class="text-zinc-300 hover:text-red-500 transition-colors p-1">
+                                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 6L6 18M6 6l12 12"/></svg>
+                            </button>
+                        </div>
+
+                        <p class="text-[10px] font-bold text-zinc-500 uppercase tracking-wide mt-1.5 leading-snug">
+                            ${item.descripcion || 'Sin ingredientes extra'} 
+                        </p>
+
+                        <div class="flex justify-between items-end mt-2">
+                            <p class="text-roger-green font-black text-sm">$${item.precio}</p>
+                            <span class="text-[10px] font-bold text-zinc-400 bg-zinc-100 px-2 py-0.5 rounded">Cant: ${item.cantidad}</span>
+                        </div>
+                    </div>
+                </div>
+            `;
+            container.insertAdjacentHTML('beforeend', itemHTML);
+        });
+    };
+
+    // Función auxiliar para eliminar items
+    window.removeItem = function(index) {
+        window.cart.splice(index, 1);
+        window.updateCartUI();
+    };
+
+    // --- MODIFICADO: Lógica de actualización de UI ---
     window.updateCartUI = function() {
         const counter = document.getElementById('cart-counter');
         const container = document.getElementById('cart-counter-container');
-        const totalItems = window.cart.reduce((acc, item) => acc + item.cantidad, 0);
+        const totalDisplay = document.getElementById('cart-total-navbar');
 
+        // Calculamos basándonos en el arreglo global
+        const totalItems = window.cart.reduce((acc, item) => acc + item.cantidad, 0);
+        const totalPrice = window.cart.reduce((acc, item) => acc + (item.precio * item.cantidad), 0);
+
+        // 1. Actualizamos Navbar
         if (counter && container) {
             counter.innerText = totalItems.toString();
+            
+            if (totalDisplay) {
+                totalDisplay.innerText = `$${totalPrice}.00`;
+            }
+
             if (totalItems > 0) {
                 container.classList.remove('hidden');
             } else {
                 container.classList.add('hidden');
             }
         }
+
+        // 2. IMPORTANTE: Actualizamos la lista visual de items (con ingredientes)
+        window.renderCartItems();
     };
 
+    // Modal Events
     document.getElementById('open-cart')?.addEventListener('click', () => {
         const modal = document.getElementById('order-modal');
         if (modal) {
             modal.classList.remove('hidden');
             document.body.style.overflow = 'hidden';
+            window.renderCartItems(); // Asegurar render al abrir
         }
     });
 
-    // Efecto de scroll para el navbar
+    // Efecto de scroll navbar
     const nav = document.getElementById('main-nav');
     window.addEventListener('scroll', () => {
         if (window.scrollY > 20) {
-            nav?.classList.add('py-3', 'shadow-sm', 'bg-white/95');
+            nav?.classList.add('py-3', 'shadow-lg', 'bg-white/95');
             nav?.classList.remove('py-5', 'bg-white/70');
         } else {
             nav?.classList.add('py-5', 'bg-white/70');
-            nav?.classList.remove('py-3', 'shadow-sm', 'bg-white/95');
+            nav?.classList.remove('py-3', 'shadow-lg', 'bg-white/95');
         }
     });
 
+    // Inicialización
     window.updateCartUI();
 </script>
 
 <style>
-    #main-nav {
-        transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-    }
+    #main-nav { transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1); }
     .text-roger-green { color: #16a34a; }
     .bg-roger-green { background-color: #16a34a; }
 
-    .especiales-link {
-        position: relative;
-    }
-    
+    .especiales-link { position: relative; }
     .especiales-link::after {
         content: '';
         position: absolute;
@@ -125,8 +190,15 @@
         background-color: #16a34a;
         transition: width 0.3s ease;
     }
+    .especiales-link:hover::after { width: 100%; }
 
-    .especiales-link:hover::after {
-        width: 100%;
-    }
+   @keyframes shimmer {
+    0% { transform: translateX(-100%); }
+    100% { transform: translateX(100%); }
+  }
+  .animate-shimmer {
+    animation: shimmer 2.5s infinite;
+  }
+
+    #cart-counter { transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275); }
 </style>

@@ -2,64 +2,64 @@
 // src/components/Toast.astro
 ---
 <div id="toast-container" class="fixed bottom-10 right-10 z-[200] flex flex-col gap-3 pointer-events-none">
-  </div>
+</div>
 
 <script is:inline>
-  /**
-   * Crea y muestra una notificación tipo Toast
-   * @param {string} message - El mensaje a mostrar
-   * @param {string} type - 'success' o 'error'
-   */
   window.showToast = function(message, type = 'success') {
     const container = document.getElementById('toast-container');
     if (!container) return;
 
     const toast = document.createElement('div');
     
-    // Estilos base y animaciones
+    // Mejoramos el redondeado a 2.5rem y añadimos el backdrop-blur
     toast.className = `
       pointer-events-auto
-      flex items-center gap-3 
-      bg-zinc-900 text-white 
-      px-6 py-4 rounded-[1.5rem] 
+      flex items-center gap-4 
+      bg-zinc-900/90 backdrop-blur-md text-white 
+      px-7 py-4 rounded-[2.5rem] 
       shadow-2xl border border-white/10
       animate-toast-in transition-all duration-500
-      min-w-[300px]
+      min-w-[280px]
     `;
 
     const icon = type === 'success' ? '🍕' : '❌';
     
+    // Añadimos la clase text-roger-green que definimos abajo
     toast.innerHTML = `
-      <span class="text-xl">${icon}</span>
+      <div class="bg-zinc-800 w-10 h-10 rounded-full flex items-center justify-center shadow-inner">
+        <span class="text-xl">${icon}</span>
+      </div>
       <div class="flex flex-col">
-        <p class="text-[10px] font-black uppercase tracking-[0.2em] text-roger-green">Roger Pizzas</p>
-        <p class="text-xs font-bold">${message}</p>
+        <p class="text-[9px] font-black uppercase tracking-[0.3em] text-roger-green">Roger Pizzas</p>
+        <p class="text-sm font-bold italic tracking-tight">${message}</p>
       </div>
     `;
 
     container.appendChild(toast);
 
-    // Eliminar el toast después de 3 segundos
     setTimeout(() => {
       toast.style.opacity = '0';
-      toast.style.transform = 'translateX(100px)';
+      toast.style.transform = 'translateX(50px) scale(0.9)';
       setTimeout(() => toast.remove(), 500);
     }, 3000);
   };
 </script>
 
 <style>
+  /* Aseguramos que el verde sea el de tu marca */
+  .text-roger-green { color: #16a34a; }
+
   @keyframes toast-in {
     from { 
       opacity: 0; 
-      transform: translateX(100px) scale(0.9); 
+      transform: translateX(100px) translateY(20px) rotate(2deg); 
     }
     to { 
       opacity: 1; 
-      transform: translateX(0) scale(1); 
+      transform: translateX(0) translateY(0) rotate(0deg); 
     }
   }
   .animate-toast-in {
-    animation: toast-in 0.5s cubic-bezier(0.23, 1, 0.32, 1) forwards;
+    animation: toast-in 0.6s cubic-bezier(0.23, 1, 0.32, 1) forwards;
   }
 </style>
